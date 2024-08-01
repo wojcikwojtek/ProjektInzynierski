@@ -2,6 +2,7 @@ package com.inzynierka.RatingTouristAttractions.Controllers;
 
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
+import com.inzynierka.RatingTouristAttractions.Requests.UserRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class UserController {
     @GetMapping("/{login}")
     User getUserByLogin(@PathVariable String login) {
         return userRepository.findByLogin(login);
+    }
+
+    @PostMapping("/register")
+    String registerUser(@RequestBody UserRequest userRequest) {
+        return "User " + userRequest.getLogin() + " was successfully registered!";
     }
 
     @DeleteMapping("/{login}")
