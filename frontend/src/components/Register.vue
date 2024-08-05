@@ -1,12 +1,20 @@
 <template>
-    <div>
-        <h1>Register</h1>
-
-        <input type="text" name="login" v-model="login" placeholder="login"><br>
-        <input type="password" name="password" v-model="password" placeholder="password"><br>
-        <input type="email" name="email" v-model="email" placeholder="email"><br>
-        <button @click="register">Register</button>
-    </div>
+  <v-layout column>
+    <v-flex xs6 offset xs-3>
+      <div class="white elevation-2">
+        <v-toolbar flat dense class="bg-cyan">
+          <v-toolbar-title>Register</v-toolbar-title>
+        </v-toolbar>
+        <div class="pl-4 pr-4 pt-2 pb-2">
+          <v-text-field v-model="login" label="login"></v-text-field>
+          <v-text-field v-model="password" label="password"></v-text-field>
+          <v-text-field v-model="email" label="email"></v-text-field>
+          <div class="error"v-html="error"></div><br>
+          <v-btn class="bg-cyan" @click="register">Register</v-btn>
+        </div>
+      </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -16,22 +24,29 @@ export default {
     return {
       login: '',
       password: '',
-      email: ''
+      email: '',
+      error: null
     }
   },
   methods: {
     async register () {
-      const response = await AuthenticationService.register({
-        login: this.login,
-        password: this.password,
-        email: this.email
-      })
-      console.log(response.data)
+      try {
+        const response = await AuthenticationService.register({
+          login: this.login,
+          password: this.password,
+          email: this.email
+        })
+        console.log(response.data)
+      } catch (error) {
+        this.error = error.response.data
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-
+.error {
+  color: red;
+}
 </style>

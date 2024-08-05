@@ -3,6 +3,8 @@ package com.inzynierka.RatingTouristAttractions.Controllers;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.UserRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    String registerUser(@RequestBody UserRequest userRequest) {
-        return "User " + userRequest.getLogin() + " was successfully registered!";
+    ResponseEntity<?> registerUser(@RequestBody UserRequest userRequest) {
+        if(userRepository.findByLogin(userRequest.getLogin()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+        }
+        if(userRepository.findByEmail(userRequest.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already in use");
+        }
+        User user = new User(userRequest.getLogin(), userRequest.getPassword(), userRequest.getEmail());
+        userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @DeleteMapping("/{login}")
