@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import PageHeader from '@/components/Header.vue'
 </script>
 
 <template>
@@ -18,10 +19,19 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
   -->
-  <RouterView />
+  <v-app>
+    <!--drobne problemy z cieniem boxa na loginie i rejestracji przez dodanie v-main-->
+    <PageHeader />
+    <v-main>
+      <v-container fluid>
+        <RouterView />
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
+/*
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -83,4 +93,5 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
+  */
 </style>
