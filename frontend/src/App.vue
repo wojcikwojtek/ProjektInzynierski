@@ -22,11 +22,7 @@ import PageHeader from '@/components/Header.vue'
   <v-app>
     <!--drobne problemy z cieniem boxa na loginie i rejestracji przez dodanie v-main-->
     <PageHeader />
-    <v-main>
-      <v-container fluid>
-        <RouterView />
-      </v-container>
-    </v-main>
+    <RouterView />
   </v-app>
 </template>
 

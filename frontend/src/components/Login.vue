@@ -26,13 +26,13 @@ import { useUserStore } from '@/stores/userStore'
 export default {
     data () {
     return {
-        username: '',
-        password: '',
-        error: null
-        }
+      username: '',
+      password: '',
+      error: null
+      }
     },
     computed: {
-        store: () => useUserStore()
+      store: () => useUserStore()
     },
     methods: {
       async login () {

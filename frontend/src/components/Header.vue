@@ -1,20 +1,29 @@
 <template>
-    <v-toolbar fixed :elevation="4" class="bg-cyan text-white">
+    <v-toolbar prominent :elevation="4" class="bg-cyan text-white">
         <v-toolbar-title class="mr-4">
             <span class="home" @click="navigateTo({name: 'home'})">RateAttractions</span>
         </v-toolbar-title>
-        <!--<v-toolbar-items>
-            <v-btn flat>
+        <v-toolbar-items>
+            <v-btn flat @click="navigateTo({name: 'attractions'})">
                 Browse
             </v-btn>
-        </v-toolbar-items>-->
+        </v-toolbar-items>
         <v-spacer></v-spacer>
-        <v-toolbar-items v-if="!isUserLoggedIn">
-            <v-btn flat @click="navigateTo({name: 'login'})">
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+            <v-btn v-if="!isUserLoggedIn" flat @click="navigateTo({name: 'login'})">
                 Login
             </v-btn>
-            <v-btn flat @click="navigateTo({name: 'register'})">
+            <v-btn v-if="!isUserLoggedIn" flat @click="navigateTo({name: 'register'})">
                 Sign up
+            </v-btn>
+            <v-btn v-if="isUserLoggedIn" flat @click="logout">
+                Log Out
             </v-btn>
         </v-toolbar-items>
     </v-toolbar>
@@ -24,14 +33,18 @@
 import { useUserStore } from '@/stores/userStore'
 export default {
     computed: {
+        userStore: () => useUserStore(),
         isUserLoggedIn() {
-            const store = useUserStore()
-            return store.isUserLoggedIn
+            return this.userStore.isUserLoggedIn
         }
     },
     methods: {
         navigateTo(route) {
             this.$router.push(route)
+        },
+        logout () {
+            this.userStore.setUser(null)
+            this.$router.push({name: "home"})
         }
     }
 }

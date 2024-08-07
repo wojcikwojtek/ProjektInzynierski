@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Register from '../components/Register.vue'
 import Login from '../components/Login.vue'
+import Attractions from '@/components/Attractions.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/attractions',
+      name: 'attractions',
+      component: Attractions
     },
     {
       path: '/about',
