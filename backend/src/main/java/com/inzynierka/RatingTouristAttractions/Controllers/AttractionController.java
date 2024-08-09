@@ -37,7 +37,8 @@ public class AttractionController {
                 attractionRequest.getCountry(),
                 attractionRequest.getCity(),
                 attractionRequest.getLocation(),
-                attractionRequest.getDescription()
+                attractionRequest.getDescription(),
+                attractionRequest.getImageUrl()
         );
         attractionRepository.save(attraction);
         return attraction;

@@ -11,14 +11,27 @@
             @click:append-inner="searchAttractions"
         ></v-text-field>
     </div>
-    <div class="d-flex justify-center pl-4 pr-4 pt-2 pb-2">
-        <div v-for="attraction in this.attractions">
-            {{ attraction.name }}<br>
-            {{ attraction.country }}<br>
-            {{ attraction.city }}<br>
-            {{ attraction.location }}<br>
-            {{ attraction.description }}<br>
-        </div>
+    <div v-for="attraction in this.attractions" class="d-flex mx-auto w-50">
+        <v-row justify="center" dense>
+            <v-col cols="12">
+                <v-card variant="outlined" max-height="150" link @click="navigateTo({name: 'home'})">
+                    <div class="d-flex flex-no-wrap justify-space-between">
+                        <div>
+                            <v-card-title class="text-h4">{{ attraction.name }}</v-card-title>
+                            <v-card-subtitle>{{ attraction.country }}-{{ attraction.city }}-{{ attraction.location }}</v-card-subtitle>
+                            <v-card-text>{{ attraction.description }}</v-card-text>
+                        </div>
+                        <v-avatar 
+                            class="ma-3"
+                            rounded="0"
+                            size="125"
+                        >
+                            <v-img src="https://www.polsl.pl/wp-content/uploads/2023/08/miniatura_4.jpg"></v-img>
+                        </v-avatar>
+                    </div>
+                </v-card>
+            </v-col>
+        </v-row>
     </div>
 </template>
   
@@ -35,13 +48,12 @@ export default {
     methods: {
         async searchAttractions() {
             if(this.searchedTerm == '') return
-            try{
-                const response = await AttractionService.search(this.searchedTerm)
-                this.attractions = response.data
-                console.log(response.data)
-            } catch(error) {
-                console.log(error.response.data)
-            }
+            const response = await AttractionService.search(this.searchedTerm)
+            this.attractions = response.data
+            console.log(response.data)
+        },
+        navigateTo(route) {
+            this.$router.push(route)
         }
     }
 }

@@ -29,13 +29,17 @@ public class Attraction {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public Attraction() {}
 
-    public Attraction(String name, String country, String city, String location, String description) {
+    public Attraction(String name, String country, String city, String location, String description, String imageUrl) {
         this.name = name;
         this.country = country;
         this.city = city;
         this.location = location;
         this.description = description;
+        this.imageUrl = imageUrl;
     }
 }
