@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Register from '../components/Register.vue'
 import Login from '../components/Login.vue'
 import Attractions from '@/components/Attractions.vue'
+import ViewAttraction from '@/components/ViewAttraction.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/attractions',
       name: 'attractions',
       component: Attractions
+    },
+    {
+      path: '/attractions/:attractionId',
+      name: 'attraction',
+      component: ViewAttraction
     },
     {
       path: '/about',

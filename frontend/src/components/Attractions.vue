@@ -11,10 +11,16 @@
             @click:append-inner="searchAttractions"
         ></v-text-field>
     </div>
-    <div v-for="attraction in this.attractions" class="d-flex mx-auto w-50">
+    <div v-for="attraction in this.attractions" class="d-flex mx-auto w-50 pt-2">
         <v-row justify="center" dense>
             <v-col cols="12">
-                <v-card variant="outlined" max-height="150" link @click="navigateTo({name: 'home'})">
+                <v-card variant="outlined" max-height="150" link 
+                    @click="navigateTo({
+                        name: 'attraction', 
+                        params: {
+                            attractionId: attraction.attraction_id
+                            }
+                        })">
                     <div class="d-flex flex-no-wrap justify-space-between">
                         <div>
                             <v-card-title class="text-h4">{{ attraction.name }}</v-card-title>
@@ -26,7 +32,7 @@
                             rounded="0"
                             size="125"
                         >
-                            <v-img src="https://www.polsl.pl/wp-content/uploads/2023/08/miniatura_4.jpg"></v-img>
+                            <v-img :src="attraction.imageUrl"></v-img>
                         </v-avatar>
                     </div>
                 </v-card>
