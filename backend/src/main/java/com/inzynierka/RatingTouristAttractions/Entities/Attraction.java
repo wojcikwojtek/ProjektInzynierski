@@ -1,8 +1,11 @@
 package com.inzynierka.RatingTouristAttractions.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,11 +29,15 @@ public class Attraction {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition="TEXT")
     private String description;
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "attraction")
+    private Set<Review> reviews;
 
     public Attraction() {}
 

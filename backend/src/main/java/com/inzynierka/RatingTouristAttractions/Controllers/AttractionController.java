@@ -1,11 +1,15 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
 import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
+import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.AttractionRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/attractions")
@@ -18,11 +22,19 @@ public class AttractionController {
     }
 
     @GetMapping
-    public List<Attraction> getAllAttractions() { return attractionRepository.findAll(); }
+    List<Attraction> getAllAttractions() { return attractionRepository.findAll(); }
 
     @GetMapping("/{id}")
-    public Attraction getAttractionById(@PathVariable long id) {
+    Attraction getAttractionById(@PathVariable long id) {
         return attractionRepository.findById(id).orElse(null);
+    }
+
+    @GetMapping("/{id}/reviews")
+    ResponseEntity<?> getAttractionReviews(@PathVariable long id) {
+        Attraction attraction = attractionRepository.findById(id).orElse(null);
+        if (attraction == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attraction not found");
+        Set<Review> reviews = attraction.getReviews();
+        return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 
     @GetMapping("/search/{name}")
@@ -31,7 +43,7 @@ public class AttractionController {
     }
 
     @PostMapping("/add")
-    public Attraction addAttraction(@RequestBody AttractionRequest attractionRequest) {
+    Attraction addAttraction(@RequestBody AttractionRequest attractionRequest) {
         Attraction attraction = new Attraction(
                 attractionRequest.getName(),
                 attractionRequest.getCountry(),
@@ -45,7 +57,7 @@ public class AttractionController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteAttractionById(@PathVariable long id) {
+    void deleteAttractionById(@PathVariable long id) {
         attractionRepository.deleteById(id);
     }
 }

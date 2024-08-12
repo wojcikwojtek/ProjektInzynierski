@@ -1,5 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -28,6 +30,14 @@ public class UserController {
         return userRepository.findByLogin(login);
     }
 
+    @GetMapping("/{id}/reviews")
+    ResponseEntity<?> getUserReviews(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        Set<Review> reviews = user.getReviews();
+        return ResponseEntity.status(HttpStatus.OK).body(reviews);
+    }
+
     @PostMapping("/register")
     ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         if(userRepository.findByLogin(registerRequest.getLogin()) != null) {
@@ -45,7 +55,7 @@ public class UserController {
     ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         User user = userRepository.findByLogin(loginRequest.getLogin());
         if(user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Username not found");
         }
         if(!user.getPassword().equals(loginRequest.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong password");
