@@ -47,6 +47,7 @@ export default {
           })
           const user = response.data
           this.store.setUser(user)
+          this.$router.go(-1)
         } catch (error) {
           this.error = error.response.data
         }

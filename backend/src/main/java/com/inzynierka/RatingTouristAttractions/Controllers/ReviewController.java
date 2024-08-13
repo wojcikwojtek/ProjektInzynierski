@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,9 +45,8 @@ public class ReviewController {
         if(user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         Attraction attraction = attractionRepository.findById(reviewRequest.getAttractionId()).orElse(null);
         if(attraction == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attraction not found");
-        String dateTime = ZonedDateTime.now(
-                ZoneId.systemDefault()
-        ).format(
+        String dateTime = LocalDateTime
+                .now().format(
                 DateTimeFormatter
                         .ofLocalizedDateTime(FormatStyle.SHORT)
                         .withLocale(

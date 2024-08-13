@@ -8,10 +8,10 @@ import lombok.Setter;
 public class ReviewRequest {
     private long userId;
     private long attractionId;
-    private int rating;
+    private double rating;
     private String contents;
 
-    public ReviewRequest(long userId, long attractionId, int rating, String contents) {
+    public ReviewRequest(long userId, long attractionId, double rating, String contents) {
         this.userId = userId;
         this.attractionId = attractionId;
         this.rating = rating;

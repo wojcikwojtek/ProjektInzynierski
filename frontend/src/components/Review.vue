@@ -16,7 +16,14 @@ const contents = defineModel('contents')
             <v-icon color="primary" icon="mdi-account"></v-icon>
         </template>
         <template v-slot:append>
-            <p>{{ rating }}/10</p>
+            <v-rating
+                v-model="rating"
+                half-increments
+                readonly
+                size="small"
+                density="compact"
+                color="cyan"
+            ></v-rating>
         </template>
         <v-card-text>{{ contents }}</v-card-text>
     </v-card>

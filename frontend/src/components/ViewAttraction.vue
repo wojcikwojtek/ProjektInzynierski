@@ -15,7 +15,7 @@
             </div>
             <h2 class="reviews-title">Reviews</h2>
             <div v-if="reviews">
-                <div v-for="review in this.reviews" class="pl-2 pr-2 pt-2 pb-2">
+                <div v-for="review in this.reviews" :key="review.review_id" class="pl-2 pr-2 pt-2 pb-2">
                     <Review
                         v-model:user="review.user.login"
                         v-model:publicationDate="review.publicationDate"
@@ -28,12 +28,17 @@
                 This attraction has no reviews
             </div>
         </v-col>
+        <v-col cols="3" class = "pl-2 pr-2 pt-2 pb-2">
+            <AddReview @publish-event="reloadReviews"></AddReview>
+            <v-btn block class="bg-cyan text-white">Add to lists</v-btn>
+        </v-col>
     </v-row>
 </template>
   
 <script>
 import AttractionService from '@/services/AttractionService';
 import Review from './Review.vue';
+import AddReview from './AddReview.vue';
 export default {
     data () {
         return {
@@ -42,12 +47,19 @@ export default {
         }
     },
     components: {
-        Review
+        Review,
+        AddReview
     },
-    async beforeMount () {
+    async mounted () {
+    //TODO: zrobic try catche i errory
         const attractionId = this.$route.params.attractionId
         this.attraction = (await AttractionService.getAttractionById(attractionId)).data
         this.reviews = (await AttractionService.getAttractionReviews(attractionId)).data
+    },
+    methods: {
+        async reloadReviews() {
+            this.reviews = (await AttractionService.getAttractionReviews(this.$route.params.attractionId)).data
+        }
     }
 }
 </script>

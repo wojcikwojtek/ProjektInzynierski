@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
-
 @Setter
 @Getter
 @Entity
@@ -19,7 +17,7 @@ public class Review {
     private long review_id;
 
     @Column(name = "rating")
-    private int rating;
+    private double rating;
 
     @Column(name = "contents", columnDefinition="TEXT")
     private String contents;
@@ -38,7 +36,7 @@ public class Review {
 
     public Review() {}
 
-    public Review(int rating, String contents, String publicationDate, User user, Attraction attraction) {
+    public Review(double rating, String contents, String publicationDate, User user, Attraction attraction) {
         this.rating = rating;
         this.contents = contents;
         this.publicationDate = publicationDate;
