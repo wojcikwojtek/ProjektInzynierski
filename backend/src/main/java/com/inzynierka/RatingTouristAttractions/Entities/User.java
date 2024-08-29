@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Setter
 @Getter
@@ -31,7 +31,11 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private Set<Review> reviews;
+    private List<Review> reviews;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Like> likes;
 
     public User() {}
 

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -34,7 +33,7 @@ public class UserController {
     ResponseEntity<?> getUserReviews(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        Set<Review> reviews = user.getReviews();
+        List<Review> reviews = user.getReviews();
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 

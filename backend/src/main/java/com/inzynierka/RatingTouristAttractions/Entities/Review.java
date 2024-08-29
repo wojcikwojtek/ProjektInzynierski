@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -33,6 +35,10 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "attraction_id")
     private Attraction attraction;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "review")
+    private List<Like> likes;
 
     public Review() {}
 

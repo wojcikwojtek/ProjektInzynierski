@@ -17,6 +17,7 @@
             <div v-if="reviews">
                 <div v-for="review in this.reviews" :key="review.review_id" class="pl-2 pr-2 pt-2 pb-2">
                     <Review
+                        v-model:id="review.review_id"
                         v-model:user="review.user.login"
                         v-model:publicationDate="review.publicationDate"
                         v-model:rating="review.rating"

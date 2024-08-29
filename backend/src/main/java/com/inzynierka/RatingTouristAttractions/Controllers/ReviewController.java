@@ -39,6 +39,13 @@ public class ReviewController {
     @GetMapping("/{id}")
     Review getReviewById(@PathVariable long id) { return reviewRepository.findById(id).orElse(null); }
 
+    @GetMapping("/{id}/likecount")
+    int getReviewLikeCount(@PathVariable long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review == null) return -1;
+        return review.getLikes().size();
+    }
+
     @PostMapping("/add")
     ResponseEntity<?> addReview(@RequestBody ReviewRequest reviewRequest) {
         User user = userRepository.findById(reviewRequest.getUserId()).orElse(null);
