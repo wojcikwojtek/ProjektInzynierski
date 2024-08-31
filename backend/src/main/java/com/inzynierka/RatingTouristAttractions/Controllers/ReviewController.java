@@ -1,6 +1,7 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
 import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
+import com.inzynierka.RatingTouristAttractions.Entities.Comment;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository;
@@ -44,6 +45,20 @@ public class ReviewController {
         Review review = reviewRepository.findById(id).orElse(null);
         if (review == null) return -1;
         return review.getLikes().size();
+    }
+
+    @GetMapping("/{id}/comments")
+    List<Comment> getReviewComments(@PathVariable long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review == null) return null;
+        return review.getComments();
+    }
+
+    @GetMapping("/{id}/commentcount")
+    int getReviewCommentCount(@PathVariable long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if (review == null) return -1;
+        return review.getComments().size();
     }
 
     @PostMapping("/add")

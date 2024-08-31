@@ -37,6 +37,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Like> likes;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
+
     public User() {}
 
     public User(String login, String password, String email) {

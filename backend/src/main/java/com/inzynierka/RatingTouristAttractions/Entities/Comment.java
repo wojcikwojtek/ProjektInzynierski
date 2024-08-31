@@ -5,21 +5,16 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @Entity
-@Table(name = "reviews")
-public class Review {
+@Table(name = "comments")
+public class Comment {
 
     @Id
-    @Column(name = "review_id", nullable = false)
+    @Column(name = "comment_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long review_id;
-
-    @Column(name = "rating")
-    private double rating;
+    private long comment_id;
 
     @Column(name = "contents", columnDefinition="TEXT")
     private String contents;
@@ -33,24 +28,15 @@ public class Review {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "attraction_id")
-    private Attraction attraction;
+    @JoinColumn(name = "review_id")
+    private Review review;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "review")
-    private List<Like> likes;
+    public Comment() {}
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "review")
-    private List<Comment> comments;
-
-    public Review() {}
-
-    public Review(double rating, String contents, String publicationDate, User user, Attraction attraction) {
-        this.rating = rating;
+    public Comment(String contents, String publicationDate, User user, Review review) {
         this.contents = contents;
         this.publicationDate = publicationDate;
         this.user = user;
-        this.attraction = attraction;
+        this.review = review;
     }
 }
