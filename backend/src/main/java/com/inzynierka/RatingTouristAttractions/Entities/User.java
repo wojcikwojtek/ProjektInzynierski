@@ -41,6 +41,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<AttractionList> lists;
+
     public User() {}
 
     public User(String login, String password, String email) {

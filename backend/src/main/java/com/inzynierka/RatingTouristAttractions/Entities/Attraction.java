@@ -39,6 +39,14 @@ public class Attraction {
     @OneToMany(mappedBy = "attraction")
     private List<Review> reviews;
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "attraction_list",
+            joinColumns = @JoinColumn(name = "attraction_id"),
+            inverseJoinColumns = @JoinColumn(name = "list_id"))
+    List<AttractionList> attractionLists;
+
     public Attraction() {}
 
     public Attraction(String name, String country, String city, String location, String description, String imageUrl) {
