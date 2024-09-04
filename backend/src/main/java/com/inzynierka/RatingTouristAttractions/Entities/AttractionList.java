@@ -24,6 +24,9 @@ public class AttractionList {
     @Column(name = "publication_date")
     private String publicationDate;
 
+    @Column(name = "size")
+    private int size;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -40,5 +43,6 @@ public class AttractionList {
         this.publicationDate = publicationDate;
         this.user = user;
         this.attractions = attractions;
+        this.size = attractions.size();
     }
 }

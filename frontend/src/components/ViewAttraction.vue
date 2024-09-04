@@ -31,7 +31,7 @@
         </v-col>
         <v-col cols="3" class = "pl-2 pr-2 pt-2 pb-2">
             <AddReview @publish-event="reloadReviews"></AddReview>
-            <v-btn block class="bg-cyan text-white">Add to lists</v-btn>
+            <AddToLists></AddToLists>
         </v-col>
     </v-row>
 </template>
@@ -40,6 +40,7 @@
 import AttractionService from '@/services/AttractionService';
 import Review from './Review.vue';
 import AddReview from './AddReview.vue';
+import AddToLists from './AddToLists.vue';
 export default {
     data () {
         return {
@@ -49,7 +50,8 @@ export default {
     },
     components: {
         Review,
-        AddReview
+        AddReview,
+        AddToLists
     },
     async mounted () {
     //TODO: zrobic try catche i errory

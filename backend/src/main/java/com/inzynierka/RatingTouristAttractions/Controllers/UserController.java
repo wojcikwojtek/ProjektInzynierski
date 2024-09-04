@@ -1,5 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
@@ -35,6 +36,14 @@ public class UserController {
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         List<Review> reviews = user.getReviews();
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
+    }
+
+    @GetMapping("{id}/lists")
+    ResponseEntity<?> getUserLists(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        List<AttractionList> lists = user.getLists();
+        return ResponseEntity.status(HttpStatus.OK).body(lists);
     }
 
     @PostMapping("/register")

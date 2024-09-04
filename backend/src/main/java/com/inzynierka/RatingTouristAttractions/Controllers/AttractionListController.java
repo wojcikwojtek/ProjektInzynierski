@@ -91,6 +91,7 @@ public class AttractionListController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Attraction already exists");
         }
         attractionList.getAttractions().add(attraction);
+        attractionList.setSize(attractionList.getAttractions().size());
         attraction.getAttractionLists().add(attractionList);
 
         attractionListRepository.save(attractionList);
