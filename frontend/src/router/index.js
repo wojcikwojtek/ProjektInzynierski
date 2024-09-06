@@ -5,6 +5,7 @@ import Login from '../components/Login.vue'
 import Attractions from '@/components/Attractions.vue'
 import ViewAttraction from '@/components/ViewAttraction.vue'
 import ViewComments from '@/components/ViewComments.vue'
+import ViewProfile from '@/components/ViewProfile.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/reviews/:reviewId',
       name: 'reviewComments',
       component: ViewComments
+    },
+    {
+      path: '/users/:userId',
+      name: 'profile',
+      component: ViewProfile
     },
     {
       path: '/about',

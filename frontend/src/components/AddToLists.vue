@@ -21,7 +21,6 @@
                         class="mx-auto pb-1"
                         variant="outlined"
                         :title="list.name"
-                        :prepend-icon="list.selected ? 'mdi-check' : ' '"
                         hover
                         @click="check(list)"
                     >
@@ -29,7 +28,8 @@
                             <v-icon v-if="list.selected" color="success" icon="mdi-check"></v-icon>
                         </template>
                         <template v-slot:append>
-                            {{ list.size }} entries
+                            <span v-if="list.size!=1">{{ list.size }} entries</span>
+                            <span v-else>{{ list.size }} entry</span>
                         </template>
                     </v-card>
                 </div>

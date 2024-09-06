@@ -1,15 +1,19 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
 import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
+import com.inzynierka.RatingTouristAttractions.Helpers.ReviewWithImage;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
+import com.inzynierka.RatingTouristAttractions.Responses.UserStatsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,9 +29,9 @@ public class UserController {
     @GetMapping
     List<User> getAllUsers() { return userRepository.findAll(); }
 
-    @GetMapping("/{login}")
-    User getUserByLogin(@PathVariable String login) {
-        return userRepository.findByLogin(login);
+    @GetMapping("/{id}")
+    User getUser(@PathVariable long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @GetMapping("/{id}/reviews")
@@ -44,6 +48,28 @@ public class UserController {
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         List<AttractionList> lists = user.getLists();
         return ResponseEntity.status(HttpStatus.OK).body(lists);
+    }
+
+    @GetMapping("/{id}/stats")
+    ResponseEntity<?> getUserStats(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        List<ReviewWithImage> recentlyReviewed = new ArrayList<>();
+        int index = user.getReviews().size() - 1;
+        for(int i = 0; i <=4; i++) {
+            if(index < 0) break;
+            recentlyReviewed.add(new ReviewWithImage(
+                    user.getReviews().get(index),
+                    user.getReviews().get(index).getAttraction().getImageUrl()
+            ));
+            index--;
+        }
+        UserStatsResponse userStats = new UserStatsResponse(
+                user.getReviews().size(),
+                user.getLists().size(),
+                recentlyReviewed
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(userStats);
     }
 
     @PostMapping("/register")
@@ -71,6 +97,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @DeleteMapping("/{login}")
-    void deleteUser(@PathVariable String login) { userRepository.deleteByLogin(login); }
+    @DeleteMapping("/{id}")
+    void deleteUser(@PathVariable long id) { userRepository.deleteById(id); }
 }
