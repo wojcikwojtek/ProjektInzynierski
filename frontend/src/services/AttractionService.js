@@ -9,5 +9,8 @@ export default {
     },
     getAttractionReviews (id) {
         return Api().get('/attractions/'+id+'/reviews')
+    },
+    getAttractionImage (id) {
+        return Api().get('/attractions/' + id + '/image')
     }
 }

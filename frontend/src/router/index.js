@@ -36,7 +36,7 @@ const router = createRouter({
       component: ViewAttraction
     },
     {
-      path: '/reviews/:reviewId',
+      path: '/attractions/:attractionId/reviews/:reviewId',
       name: 'reviewComments',
       component: ViewComments
     },

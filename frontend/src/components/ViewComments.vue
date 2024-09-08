@@ -1,6 +1,17 @@
 <template>
     <v-row no-gutters>
-        <v-col cols="3"></v-col>
+        <v-col cols="3">
+            <v-btn 
+                class="bg-cyan text-white ma-2 pa-2"
+                text="Go to attraction"
+                @click="navigateTo({ 
+                    name: 'attraction', 
+                    params: {
+                        attractionId: this.$route.params.attractionId
+                        }
+                })"
+            ></v-btn>
+        </v-col>
         <v-col cols="6" v-if="review" class="pl-2 pr-2 pt-2 pb-2">
             <div>
                 <Review
@@ -53,6 +64,7 @@ import ReviewService from '@/services/ReviewService';
 import Review from './Review.vue';
 import { useUserStore } from '@/stores/userStore';
 import CommentService from '@/services/CommentService';
+import AttractionService from '@/services/AttractionService';
 
 export default {
     data () {
@@ -60,6 +72,7 @@ export default {
             review: null,
             comments: null,
             contents: null,
+            imageUrl: null,
             rules: {
                 required: value => !!value || 'Field is required'
             }
@@ -81,6 +94,7 @@ export default {
     //TODO: zrobic try catche i errory
         this.review = (await ReviewService.getReview(this.reviewId)).data
         this.comments = (await ReviewService.getComments(this.reviewId)).data
+        this.imageUrl = (await AttractionService.getAttractionImage(this.route.params.attractionId)).data
     },
     methods: {
         async reloadComments() {
@@ -97,6 +111,9 @@ export default {
             })
             this.contents = null
             this.reloadComments()
+        },
+        navigateTo(route) {
+            this.$router.push(route)
         }
     }
 }

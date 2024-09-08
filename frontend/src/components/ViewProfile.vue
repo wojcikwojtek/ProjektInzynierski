@@ -20,6 +20,7 @@
                             @click="navigateTo({
                                 name: 'reviewComments',
                                 params: {
+                                    attractionId: review.attractionId,
                                     reviewId: review.review.review_id
                                 }
                             })">

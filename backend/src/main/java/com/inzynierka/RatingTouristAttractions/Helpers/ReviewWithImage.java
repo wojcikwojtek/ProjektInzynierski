@@ -8,10 +8,12 @@ import lombok.Setter;
 @Setter
 public class ReviewWithImage {
     private Review review;
+    private long attractionId;
     private String imageUrl;
 
-    public ReviewWithImage(Review review, String imageUrl) {
+    public ReviewWithImage(Review review, long attractionId, String imageUrl) {
         this.review = review;
+        this.attractionId = attractionId;
         this.imageUrl = imageUrl;
     }
 }

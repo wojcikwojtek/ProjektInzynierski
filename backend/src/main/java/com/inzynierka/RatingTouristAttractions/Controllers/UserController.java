@@ -60,6 +60,7 @@ public class UserController {
             if(index < 0) break;
             recentlyReviewed.add(new ReviewWithImage(
                     user.getReviews().get(index),
+                    user.getReviews().get(index).getAttraction().getAttraction_id(),
                     user.getReviews().get(index).getAttraction().getImageUrl()
             ));
             index--;

@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import ReviewService from '@/services/ReviewService';
 import LikeService from '@/services/LikeService';
 import { useUserStore } from '@/stores/userStore';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const id = defineModel('id')
 const user = defineModel('user')
@@ -16,7 +16,8 @@ const didUserLikeReview = ref(false)
 const likeCount = ref(0)
 const commentCount = ref(0)
 const router = useRouter()
-const currentPath = (router.currentRoute.value.path + "").substring(0, 9)
+const route = useRoute()
+const currentPath = router.currentRoute.value.path + ""
 
 onMounted(async () => {
     if(userStore.isUserLoggedIn) {
@@ -68,7 +69,7 @@ function navigateTo(route) {
         </template>
         <v-card-text>{{ contents }}</v-card-text>
         <v-card-actions v-if="userStore.isUserLoggedIn">
-            <div v-if="currentPath!='/reviews/'">
+            <div v-if="!currentPath.includes('reviews')">
                 <v-btn
                     size="small"
                     :color="didUserLikeReview ? 'red' : 'grey'"
@@ -85,6 +86,7 @@ function navigateTo(route) {
                     @click="navigateTo({
                         name: 'reviewComments',
                         params: {
+                            attractionId: route.params.attractionId,
                             reviewId: id
                         }
                     })"
