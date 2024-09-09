@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import ReviewService from '@/services/ReviewService';
 import LikeService from '@/services/LikeService';
+import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -45,17 +46,33 @@ async function likeReview() {
 function navigateTo(route) {
     router.push(route)
 }
+
+async function findUser(login) {
+    if(!userStore.isUserLoggedIn) {
+        navigateTo({name: 'login'})
+        return
+    }
+    const id = (await UserService.findUser(login)).data.user_id
+    navigateTo({
+        name: 'profile',
+        params: {
+            userId: id
+        }
+    })
+}
 </script>
 
 <template>
     <v-card 
         class="mx-auto"
         variant="outlined"
-        :title="user"
         :subtitle="publicationDate"
     >
         <template v-slot:prepend>
             <v-icon color="primary" icon="mdi-account"></v-icon>
+        </template>
+        <template v-slot:title>
+            <span @click="findUser(user)" class="link">{{ user }}</span>
         </template>
         <template v-slot:append>
             <v-rating
@@ -108,4 +125,7 @@ function navigateTo(route) {
 </template>
 
 <style scoped>
+.link{
+    cursor: pointer;
+}
 </style>

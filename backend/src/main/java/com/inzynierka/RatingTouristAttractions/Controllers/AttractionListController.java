@@ -71,6 +71,7 @@ public class AttractionListController {
         AttractionList list = new AttractionList(
                 listRequest.getName(),
                 dateTime,
+                listRequest.getDescription(),
                 user,
                 attractions
         );

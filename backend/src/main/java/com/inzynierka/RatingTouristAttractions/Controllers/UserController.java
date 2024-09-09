@@ -34,6 +34,11 @@ public class UserController {
         return userRepository.findById(id).orElse(null);
     }
 
+    @GetMapping("/{login}/login")
+    User getUserByLogin(@PathVariable String login) {
+        return userRepository.findByLogin(login);
+    }
+
     @GetMapping("/{id}/reviews")
     ResponseEntity<?> getUserReviews(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);

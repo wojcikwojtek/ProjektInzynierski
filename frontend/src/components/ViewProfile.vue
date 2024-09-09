@@ -5,7 +5,7 @@
         </v-col>
         <v-col v-if="stats" cols="8" class = "pl-2 pr-2 pt-2 pb-2">
             <div class="d-flex mb-6">
-                <span class="text-h2 ma-2 pa-2 me-auto">{{ userStore.user.login }}</span>
+                <span class="text-h2 ma-2 pa-2 me-auto">{{ this.user.login }}</span>
                 <span class="text-h4 ma-2 pa-2">{{ stats.reviewCount }} reviews</span>
                 <span class="text-h4 ma-2 pa-2">{{ stats.listCount }} lists</span>
             </div>
@@ -13,7 +13,6 @@
                 <h3 class="title">Recently reviewed</h3>
                 <v-row no-gutters>
                     <v-col v-for="review in stats.recentlyReviewed" :key="review.review.review_id" cols="3" class="pa-1">
-                        <!--Zmienic url recenzji na attraction/id/review/id i dodac przycisk do zobaczenia atrakcji-->
                         <v-img 
                             :src="review.imageUrl" 
                             class="hover-image"
@@ -43,19 +42,17 @@
 </template>
 
 <script>
-import { useUserStore } from '@/stores/userStore';
 import UserService from '@/services/UserService';
 export default {
     data () {
         return {
+            user: null,
             stats: null
         }
     },
-    computed: {
-        userStore: () => useUserStore()
-    },
     async mounted() {
-        this.stats = (await UserService.getStats(this.userStore.user.user_id)).data
+        this.user = (await UserService.getUser(this.$route.params.userId)).data
+        this.stats = (await UserService.getStats(this.$route.params.userId)).data
     },
     methods: {
         navigateTo(route) {
