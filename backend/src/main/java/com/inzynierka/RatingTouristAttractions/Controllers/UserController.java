@@ -1,10 +1,9 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
-import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
 import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
-import com.inzynierka.RatingTouristAttractions.Helpers.ReviewWithImage;
+import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
@@ -43,8 +42,11 @@ public class UserController {
     ResponseEntity<?> getUserReviews(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        List<Review> reviews = user.getReviews();
-        return ResponseEntity.status(HttpStatus.OK).body(reviews);
+        List<ReviewDto> reviewsDto = new ArrayList<>();
+        for (Review review : user.getReviews()) {
+            reviewsDto.add(new ReviewDto(review, review.getAttraction().getAttraction_id(), review.getAttraction().getImageUrl()));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(reviewsDto);
     }
 
     @GetMapping("{id}/lists")
@@ -59,11 +61,11 @@ public class UserController {
     ResponseEntity<?> getUserStats(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        List<ReviewWithImage> recentlyReviewed = new ArrayList<>();
+        List<ReviewDto> recentlyReviewed = new ArrayList<>();
         int index = user.getReviews().size() - 1;
         for(int i = 0; i <=4; i++) {
             if(index < 0) break;
-            recentlyReviewed.add(new ReviewWithImage(
+            recentlyReviewed.add(new ReviewDto(
                     user.getReviews().get(index),
                     user.getReviews().get(index).getAttraction().getAttraction_id(),
                     user.getReviews().get(index).getAttraction().getImageUrl()

@@ -4,6 +4,9 @@ export default {
     getUser(id) {
         return Api().get('users/' + id)
     },
+    getReviews(id) {
+        return Api().get('users/' + id + '/reviews')
+    },
     getLists(id) {
         return Api().get('users/' + id + '/lists')
     },
