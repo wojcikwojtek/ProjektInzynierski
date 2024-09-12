@@ -35,6 +35,10 @@ public class AttractionList {
     private User user;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "list")
+    private List<Like> likes;
+
+    @JsonIgnore
     @ManyToMany(mappedBy = "attractionLists")
     private List<Attraction> attractions;
 

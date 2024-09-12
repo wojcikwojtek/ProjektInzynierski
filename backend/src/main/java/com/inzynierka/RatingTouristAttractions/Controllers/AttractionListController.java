@@ -8,6 +8,7 @@ import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.AddToListRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.AttractionRequest;
+import com.inzynierka.RatingTouristAttractions.Requests.EditListRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.ListRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,13 @@ public class AttractionListController {
         AttractionList attractionList = attractionListRepository.findById(id).orElse(null);
         if (attractionList == null) return null;
         return attractionList.getAttractions();
+    }
+
+    @GetMapping("/{id}/likecount")
+    int getListLikeCount(@PathVariable long id) {
+        AttractionList attractionList = attractionListRepository.findById(id).orElse(null);
+        if (attractionList == null) return -1;
+        return attractionList.getLikes().size();
     }
 
     @PostMapping("/create")
@@ -98,6 +106,15 @@ public class AttractionListController {
         attractionListRepository.save(attractionList);
         attractionRepository.save(attraction);
         return ResponseEntity.status(HttpStatus.OK).body(attractionList);
+    }
+
+    @PutMapping("/editentries")
+    ResponseEntity<?> updateEntries(@RequestBody EditListRequest editListRequest) {
+        AttractionList attractionList = attractionListRepository.findById(editListRequest.getListId()).orElse(null);
+        if(attractionList == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("List not found");
+        attractionList.setAttractions(editListRequest.getAttractions());
+        attractionListRepository.save(attractionList);
+        return ResponseEntity.status(HttpStatus.OK).body(attractionList.getAttractions());
     }
 
     @DeleteMapping("/{id}")

@@ -26,10 +26,16 @@ public class Like {
     @JoinColumn(name = "review_id")
     private Review review;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "list_id")
+    private AttractionList list;
+
     public Like() {}
 
-    public Like(User user, Review review) {
+    public Like(User user, Review review, AttractionList list) {
         this.user = user;
         this.review = review;
+        this.list = list;
     }
 }

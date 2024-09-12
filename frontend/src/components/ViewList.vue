@@ -18,7 +18,37 @@
                         <span class="pa-1">{{ listInfo.user.login }}</span>
                     </div>
                 </template>
+                <template v-slot:append v-if="userStore.isUserLoggedIn && listInfo.user.user_id == userStore.user.user_id">
+                    <v-menu>
+                        <template v-slot:activator="{ props }">
+                            <v-btn 
+                                icon="mdi-dots-vertical"
+                                variant="text"
+                                v-bind="props"
+                            ></v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item
+                                v-for="(item, i) in items"
+                                :key="i"
+                                :value="item"
+                            >
+                                <v-list-item-title @click="menuOptions(i)">{{ item.title }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </template>
                 <v-card-text>{{ listInfo.description }}</v-card-text>
+                <v-card-actions v-if="userStore.isUserLoggedIn">
+                    <v-btn
+                        size="small"
+                        :color="didUserLikeList ? 'red' : 'grey'"
+                        icon="mdi-heart"
+                        variant="text"
+                        @click="likeList"
+                    ></v-btn>
+                    <span class="subheading">{{ likeCount }}</span>
+                </v-card-actions>
             </v-card>
             <v-divider :thickness="4"></v-divider>
             <draggable
@@ -78,13 +108,18 @@
                     </div>
                 </template>
             </draggable>
+            <div v-if="enabled" class="d-flex justify-end pa-2">
+                <v-btn class="bg-cyan text-white" @click="edit">Save changes</v-btn>
+            </div>
         </v-col>
     </v-row>
 </template>
 
 <script>
+import LikeService from '@/services/LikeService';
 import ListService from '@/services/ListService';
 import UserService from '@/services/UserService';
+import { useUserStore } from '@/stores/userStore';
 import draggable from 'vuedraggable'
 export default {
     data () {
@@ -92,14 +127,26 @@ export default {
             listInfo: null,
             listEntries: null,
             ready: false,
-            enabled: true,
-            dragging: false
+            enabled: false,
+            dragging: false,
+            didUserLikeList: false,
+            likeCount: 0,
+            items: [
+                { title: 'Edit' }
+            ]
         }
     },
     components: {
         draggable
     },
+    computed: {
+        userStore: () => useUserStore()
+    },
     async mounted() {
+        if(this.userStore.isUserLoggedIn) {
+            this.didUserLikeList = (await LikeService.userLikedList(this.userStore.user.user_id, this.$route.params.listId)).data
+            this.likeCount = (await ListService.getLikeCount(this.$route.params.listId)).data
+        }
         this.listInfo = (await ListService.getList(this.$route.params.listId)).data
         this.listEntries = (await ListService.getListEntries(this.$route.params.listId)).data
         console.log(this.listEntries)
@@ -125,6 +172,35 @@ export default {
         onEnd() {
             this.dragging = false
             console.log(this.listEntries)
+        },
+        async likeList() {
+            if(this.didUserLikeList) {
+                const response = (await LikeService.deleteLikedList(this.userStore.user.user_id, this.$route.params.listId))
+                this.didUserLikeList = false
+                this.likeCount--
+            } else {
+                const response = await LikeService.likeList({
+                    userId: this.userStore.user.user_id,
+                    listId: this.$route.params.listId
+                })
+                this.didUserLikeList = true
+                this.likeCount++
+            }
+        },
+        async edit() {
+            const response = await ListService.editEntries({
+                listId: this.$route.params.listId,
+                attractions: this.listEntries
+            })
+            console.log(response.data)
+            this.enabled = false
+        },
+        menuOptions(i) {
+            switch(i) {
+                case 0:
+                    this.enabled = true
+                    break
+            }
         }
     }
 }
