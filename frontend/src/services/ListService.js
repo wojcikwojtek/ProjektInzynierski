@@ -15,5 +15,8 @@ export default {
     },
     editEntries(data) {
         return Api().put('lists/editentries', data)
+    },
+    deleteEntry(id, attractionId) {
+        return Api().delete('lists/' + id + '/entry/' + attractionId)
     }
 }

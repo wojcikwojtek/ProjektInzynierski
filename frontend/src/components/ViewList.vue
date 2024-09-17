@@ -54,7 +54,7 @@
             <draggable
                 :list="listEntries"
                 :disabled="!enabled"
-                item-key="name"
+                item-key="position"
                 class="list-group"
                 ghost-class="ghost"
                 :move="checkMove"
@@ -68,9 +68,9 @@
                         >
                             <div class="d-flex flex-no-wrap justify-space-between">
                                 <div>
-                                    <v-card-title>{{ element.name }}</v-card-title>
+                                    <v-card-title>{{ element.attraction.name }}</v-card-title>
                                     <v-card-subtitle>
-                                        {{ element.country }}-{{ element.city }}-{{ element.location }}
+                                        {{ element.attraction.country }}-{{ element.attraction.city }}-{{ element.attraction.location }}
                                     </v-card-subtitle>
                                     <v-card-text>
                                         <v-rating
@@ -90,10 +90,16 @@
                                             @click="navigateTo({
                                                 name: 'reviewComments',
                                                 params: {
-                                                    attractionId: element.attraction_id,
+                                                    attractionId: element.attraction.attraction_id,
                                                     reviewId: element.ratingAndId['1']
                                                 }
                                             })"></v-btn>
+                                        <v-btn
+                                            v-if="enabled"
+                                            class="bg-red text-white"
+                                            text="Delete"
+                                            size="small"
+                                            @click="deleteAttraction(element.id)"></v-btn>
                                     </v-card-text>
                                 </div>
                                 <v-avatar 
@@ -101,7 +107,7 @@
                                     rounded="0"
                                     size="125"
                                 >
-                                    <v-img :src="element.imageUrl"></v-img>
+                                    <v-img :src="element.attraction.imageUrl"></v-img>
                                 </v-avatar>
                             </div>
                         </v-card>
@@ -153,7 +159,7 @@ export default {
         const reviews = (await UserService.getReviews(this.listInfo.user.user_id)).data
         this.listEntries = this.listEntries.map(entry => ({
             ...entry,
-            ratingAndId: this.findRating(entry.attraction_id, reviews)
+            ratingAndId: this.findRating(entry.attraction.attraction_id, reviews)
         }))
         this.ready = true
     },
@@ -188,6 +194,12 @@ export default {
             }
         },
         async edit() {
+            console.log(this.listEntries)
+            var index = 0
+            this.listEntries.forEach(element => {
+                element.position = index
+                index++
+            });
             const response = await ListService.editEntries({
                 listId: this.$route.params.listId,
                 attractions: this.listEntries
@@ -201,6 +213,13 @@ export default {
                     this.enabled = true
                     break
             }
+        },
+        async deleteAttraction(id) {
+            //TODO: zrobic moze tak ze usuniecie atrakcji staje sie permamentne dopiero po nacisnieciu save changes
+            const response = await ListService.deleteEntry(id.list_id, id.attraction_id)
+            const value = this.listEntries.find(element => element.id === id)
+            this.listEntries = this.listEntries.filter(item => item !== value)
+            console.log(this.listEntries)
         }
     }
 }

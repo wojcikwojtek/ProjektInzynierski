@@ -39,17 +39,16 @@ public class AttractionList {
     private List<Like> likes;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "attractionLists")
-    private List<Attraction> attractions;
+    @OneToMany(mappedBy = "list")
+    private List<AttractionPosition> attractions;
 
     public AttractionList() {}
 
-    public AttractionList(String name, String publicationDate, String description, User user, List<Attraction> attractions) {
+    public AttractionList(String name, String publicationDate, String description, User user) {
         this.name = name;
         this.publicationDate = publicationDate;
         this.description = description;
         this.user = user;
-        this.attractions = attractions;
         this.size = attractions.size();
     }
 }

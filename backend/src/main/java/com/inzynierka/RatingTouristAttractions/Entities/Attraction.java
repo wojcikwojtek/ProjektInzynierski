@@ -40,12 +40,8 @@ public class Attraction {
     private List<Review> reviews;
 
     @JsonIgnore
-    @ManyToMany
-    @JoinTable(
-            name = "attraction_list",
-            joinColumns = @JoinColumn(name = "attraction_id"),
-            inverseJoinColumns = @JoinColumn(name = "list_id"))
-    List<AttractionList> attractionLists;
+    @OneToMany(mappedBy = "attraction")
+    List<AttractionPosition> attractionLists;
 
     public Attraction() {}
 
