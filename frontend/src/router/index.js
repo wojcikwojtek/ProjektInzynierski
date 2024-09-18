@@ -7,6 +7,7 @@ import ViewAttraction from '@/components/ViewAttraction.vue'
 import ViewComments from '@/components/ViewComments.vue'
 import ViewProfile from '@/components/ViewProfile.vue'
 import ViewList from '@/components/ViewList.vue'
+import UserLists from '@/components/UserLists.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +46,11 @@ const router = createRouter({
       path: '/users/:userId',
       name: 'profile',
       component: ViewProfile
+    },
+    {
+      path: '/users/:userId/lists',
+      name: 'userLists',
+      component: UserLists
     },
     {
       path: '/lists/:listId',

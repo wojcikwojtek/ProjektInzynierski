@@ -65,6 +65,7 @@
                     <div class="list-group-item" :class="{ 'not-draggable': !enabled }">
                         <v-card
                             variant="outlined"
+                            v-if="!element.hidden"
                         >
                             <div class="d-flex flex-no-wrap justify-space-between">
                                 <div>
@@ -99,7 +100,7 @@
                                             class="bg-red text-white"
                                             text="Delete"
                                             size="small"
-                                            @click="deleteAttraction(element.id)"></v-btn>
+                                            @click="addToDeleted(element)"></v-btn>
                                     </v-card-text>
                                 </div>
                                 <v-avatar 
@@ -115,6 +116,7 @@
                 </template>
             </draggable>
             <div v-if="enabled" class="d-flex justify-end pa-2">
+                <v-btn class="bg-cyan text-white" @click="revertChanges">Return</v-btn>
                 <v-btn class="bg-cyan text-white" @click="edit">Save changes</v-btn>
             </div>
         </v-col>
@@ -132,6 +134,7 @@ export default {
         return {
             listInfo: null,
             listEntries: null,
+            reviews: null,
             ready: false,
             enabled: false,
             dragging: false,
@@ -139,7 +142,8 @@ export default {
             likeCount: 0,
             items: [
                 { title: 'Edit' }
-            ]
+            ],
+            deleted: []
         }
     },
     components: {
@@ -155,17 +159,16 @@ export default {
         }
         this.listInfo = (await ListService.getList(this.$route.params.listId)).data
         this.listEntries = (await ListService.getListEntries(this.$route.params.listId)).data
-        console.log(this.listEntries)
-        const reviews = (await UserService.getReviews(this.listInfo.user.user_id)).data
+        this.reviews = (await UserService.getReviews(this.listInfo.user.user_id)).data
         this.listEntries = this.listEntries.map(entry => ({
             ...entry,
-            ratingAndId: this.findRating(entry.attraction.attraction_id, reviews)
+            ratingAndId: this.findRating(entry.attraction.attraction_id, this.reviews),
+            hidden: false
         }))
         this.ready = true
     },
     methods: {
         navigateTo(route) {
-            console.log(route)
             this.$router.push(route)
         },
         findRating(attractionId, reviews) {
@@ -194,7 +197,12 @@ export default {
             }
         },
         async edit() {
-            console.log(this.listEntries)
+            this.deleted.forEach(element =>{
+                if(this.listEntries.some(obj => obj === element)) {
+                    this.deleteAttraction(element.id)
+                }
+            })
+            this.listEntries = this.listEntries.filter(obj => !this.deleted.includes(obj))
             var index = 0
             this.listEntries.forEach(element => {
                 element.position = index
@@ -204,7 +212,7 @@ export default {
                 listId: this.$route.params.listId,
                 attractions: this.listEntries
             })
-            console.log(response.data)
+            this.deleted = []
             this.enabled = false
         },
         menuOptions(i) {
@@ -215,11 +223,23 @@ export default {
             }
         },
         async deleteAttraction(id) {
-            //TODO: zrobic moze tak ze usuniecie atrakcji staje sie permamentne dopiero po nacisnieciu save changes
             const response = await ListService.deleteEntry(id.list_id, id.attraction_id)
-            const value = this.listEntries.find(element => element.id === id)
-            this.listEntries = this.listEntries.filter(item => item !== value)
-            console.log(this.listEntries)
+        },
+        addToDeleted(element) {
+            element.hidden = true
+            this.deleted.push(element)
+        },
+        async revertChanges() {
+            this.deleted = []
+            this.ready = false
+            this.listEntries = (await ListService.getListEntries(this.$route.params.listId)).data
+            this.listEntries = this.listEntries.map(entry => ({
+                ...entry,
+                ratingAndId: this.findRating(entry.attraction.attraction_id, this.reviews),
+                hidden: false
+            }))
+            this.enabled = false
+            this.ready = true
         }
     }
 }
