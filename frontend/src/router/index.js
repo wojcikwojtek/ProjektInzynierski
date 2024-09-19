@@ -8,6 +8,7 @@ import ViewComments from '@/components/ViewComments.vue'
 import ViewProfile from '@/components/ViewProfile.vue'
 import ViewList from '@/components/ViewList.vue'
 import UserLists from '@/components/UserLists.vue'
+import UserReviews from '@/components/UserReviews.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +52,11 @@ const router = createRouter({
       path: '/users/:userId/lists',
       name: 'userLists',
       component: UserLists
+    },
+    {
+      path: '/users/:userId/reviews',
+      name: 'userReviews',
+      component: UserReviews
     },
     {
       path: '/lists/:listId',

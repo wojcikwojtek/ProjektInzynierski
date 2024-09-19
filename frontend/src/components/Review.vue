@@ -66,13 +66,15 @@ async function findUser(login) {
     <v-card 
         class="mx-auto"
         variant="outlined"
-        :subtitle="publicationDate"
     >
         <template v-slot:prepend>
             <v-icon color="primary" icon="mdi-account"></v-icon>
         </template>
         <template v-slot:title>
             <span @click="findUser(user)" class="link">{{ user }}</span>
+        </template>
+        <template v-slot:subtitle>
+            {{ publicationDate }}
         </template>
         <template v-slot:append>
             <v-rating
@@ -86,40 +88,29 @@ async function findUser(login) {
         </template>
         <v-card-text>{{ contents }}</v-card-text>
         <v-card-actions v-if="userStore.isUserLoggedIn">
-            <div v-if="!currentPath.includes('reviews')">
-                <v-btn
-                    size="small"
-                    :color="didUserLikeReview ? 'red' : 'grey'"
-                    icon="mdi-heart"
-                    variant="text"
-                    @click="likeReview"
-                ></v-btn>
-                <span class="subheading">{{ likeCount }}</span>
-                <v-btn
-                    size="small"
-                    color="grey"
-                    icon="mdi-comment"
-                    variant="text"
-                    @click="navigateTo({
-                        name: 'reviewComments',
-                        params: {
-                            attractionId: route.params.attractionId,
-                            reviewId: id
-                        }
-                    })"
-                ></v-btn>
-                <span class="subheading">{{ commentCount }}</span>
-            </div>
-            <div v-else>
-                <v-btn
-                    size="small"
-                    :color="didUserLikeReview ? 'red' : 'grey'"
-                    icon="mdi-heart"
-                    variant="text"
-                    @click="likeReview"
-                ></v-btn>
-                <span class="subheading">{{ likeCount }}</span>
-            </div>
+            <v-btn
+                size="small"
+                :color="didUserLikeReview ? 'red' : 'grey'"
+                icon="mdi-heart"
+                variant="text"
+                @click="likeReview"
+            ></v-btn>
+            <span class="subheading">{{ likeCount }}</span>
+            <v-btn
+                size="small"
+                color="grey"
+                icon="mdi-comment"
+                variant="text"
+                v-if="!currentPath.includes('reviews')"
+                @click="navigateTo({
+                    name: 'reviewComments',
+                    params: {
+                        attractionId: route.params.attractionId,
+                        reviewId: id
+                    }
+                })"
+            ></v-btn>
+            <span v-if="!currentPath.includes('reviews')" class="subheading">{{ commentCount }}</span>
         </v-card-actions>
     </v-card>
 </template>

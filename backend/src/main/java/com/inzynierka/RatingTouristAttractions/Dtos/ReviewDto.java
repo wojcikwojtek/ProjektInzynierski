@@ -9,11 +9,13 @@ import lombok.Setter;
 public class ReviewDto {
     private Review review;
     private long attractionId;
+    private String attractionName;
     private String imageUrl;
 
-    public ReviewDto(Review review, long attractionId, String imageUrl) {
+    public ReviewDto(Review review, long attractionId, String attractionName, String imageUrl) {
         this.review = review;
         this.attractionId = attractionId;
+        this.attractionName = attractionName;
         this.imageUrl = imageUrl;
     }
 }

@@ -44,7 +44,12 @@ public class UserController {
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         List<ReviewDto> reviewsDto = new ArrayList<>();
         for (Review review : user.getReviews()) {
-            reviewsDto.add(new ReviewDto(review, review.getAttraction().getAttraction_id(), review.getAttraction().getImageUrl()));
+            reviewsDto.add(new ReviewDto(
+                    review,
+                    review.getAttraction().getAttraction_id(),
+                    review.getAttraction().getName(),
+                    review.getAttraction().getImageUrl()
+            ));
         }
         return ResponseEntity.status(HttpStatus.OK).body(reviewsDto);
     }
@@ -68,6 +73,7 @@ public class UserController {
             recentlyReviewed.add(new ReviewDto(
                     user.getReviews().get(index),
                     user.getReviews().get(index).getAttraction().getAttraction_id(),
+                    user.getReviews().get(index).getAttraction().getName(),
                     user.getReviews().get(index).getAttraction().getImageUrl()
             ));
             index--;

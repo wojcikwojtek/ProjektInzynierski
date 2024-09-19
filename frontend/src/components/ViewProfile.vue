@@ -87,6 +87,12 @@ export default {
         menuOptions(i) {
             switch(i) {
                 case 0:
+                    this.navigateTo({
+                        name: 'userReviews',
+                        params: {
+                            userId: this.$route.params.userId
+                        }
+                    })
                     break
                 case 1:
                     this.navigateTo({
