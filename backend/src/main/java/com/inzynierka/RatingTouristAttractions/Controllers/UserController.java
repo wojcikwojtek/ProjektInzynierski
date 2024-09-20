@@ -5,6 +5,7 @@ import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
+import com.inzynierka.RatingTouristAttractions.Requests.FollowUserRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
 import com.inzynierka.RatingTouristAttractions.Responses.UserStatsResponse;
@@ -81,9 +82,26 @@ public class UserController {
         UserStatsResponse userStats = new UserStatsResponse(
                 user.getReviews().size(),
                 user.getLists().size(),
+                user.getFollowedUsers().size(),
                 recentlyReviewed
         );
         return ResponseEntity.status(HttpStatus.OK).body(userStats);
+    }
+
+    @GetMapping("/{id}/following")
+    ResponseEntity<?> getUserFriends(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        List<User> followedUsers = user.getFollowedUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(followedUsers);
+    }
+
+    @GetMapping("/{id}/isfollowing/{userId}")
+    boolean isUserFollowing(@PathVariable long id, @PathVariable long userId) {
+        User user = userRepository.findById(id).orElse(null);
+        User followedUser = userRepository.findById(userId).orElse(null);
+        if (user == null || followedUser == null) return false;
+        return user.getFollowedUsers().contains(followedUser);
     }
 
     @PostMapping("/register")
@@ -111,6 +129,26 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @PostMapping("/follow")
+    ResponseEntity<?> followUser(@RequestBody FollowUserRequest followUserRequest) {
+        User user = userRepository.findById(followUserRequest.getUserId()).orElse(null);
+        if(user == null) ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        User followedUser = userRepository.findById(followUserRequest.getFollowedUserId()).orElse(null);
+        if(followedUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Followed user not found");
+        user.getFollowedUsers().add(followedUser);
+        userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
     @DeleteMapping("/{id}")
     void deleteUser(@PathVariable long id) { userRepository.deleteById(id); }
+
+    @DeleteMapping("/{id}/unfollow/{userId}")
+    void unfollowUser(@PathVariable long id, @PathVariable long userId) {
+        User user = userRepository.findById(id).orElse(null);
+        User followedUser = userRepository.findById(userId).orElse(null);
+        if(user == null || followedUser == null) return;
+        user.getFollowedUsers().remove(followedUser);
+        userRepository.save(user);
+    }
 }

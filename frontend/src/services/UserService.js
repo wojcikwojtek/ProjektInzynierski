@@ -15,5 +15,14 @@ export default {
     },
     findUser(login) {
         return Api().get('users/' + login + '/login')
+    },
+    isUserFollowing(id, followedUserId) {
+        return Api().get('users/' + id + '/isfollowing/' + followedUserId)
+    },
+    followUser(data) {
+        return Api().post('users/follow', data)
+    },
+    unfollowUser(id, followedUserId) {
+        return Api().delete('users/' + id + '/unfollow/' + followedUserId)
     }
 }

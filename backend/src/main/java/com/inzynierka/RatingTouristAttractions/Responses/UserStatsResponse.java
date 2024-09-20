@@ -11,11 +11,13 @@ import java.util.List;
 public class UserStatsResponse {
     private int reviewCount;
     private int listCount;
+    private int followingCount;
     private List<ReviewDto> recentlyReviewed;
 
-    public UserStatsResponse(int reviewCount, int listCount, List<ReviewDto> recentlyReviewed) {
+    public UserStatsResponse(int reviewCount, int listCount, int followingCount, List<ReviewDto> recentlyReviewed) {
         this.reviewCount = reviewCount;
         this.listCount = listCount;
+        this.followingCount = followingCount;
         this.recentlyReviewed = recentlyReviewed;
     }
 }

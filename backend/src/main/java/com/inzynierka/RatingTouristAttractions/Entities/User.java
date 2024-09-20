@@ -45,6 +45,15 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<AttractionList> lists;
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_following",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_user_id")
+    )
+    private List<User> followedUsers;
+
     public User() {}
 
     public User(String login, String password, String email) {

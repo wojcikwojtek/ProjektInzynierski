@@ -6,6 +6,12 @@
         <v-col v-if="stats" cols="7" class = "pl-2 pr-2 pt-2 pb-2">
             <div class="d-flex mb-6">
                 <span class="text-h2 ma-2 pa-2 me-auto">{{ this.user.login }}</span>
+                <v-btn
+                    v-if="userStore.isUserLoggedIn && userStore.user.user_id!=this.$route.params.userId"
+                    :color="isUserFollowing ? 'grey' : 'cyan'"
+                    class="text-white align-self-center"
+                    @click="followUser"
+                >{{ followMessage }}</v-btn>
             </div>
             <div>
                 <h3 class="title">Recently reviewed</h3>
@@ -57,18 +63,17 @@
 
 <script>
 import UserService from '@/services/UserService';
+import { useUserStore } from '@/stores/userStore';
 export default {
     data () {
         return {
             user: null,
             stats: null,
+            isUserFollowing: false
         }
     },
-    async mounted() {
-        this.user = (await UserService.getUser(this.$route.params.userId)).data
-        this.stats = (await UserService.getStats(this.$route.params.userId)).data
-    },
     computed: {
+        userStore: () => useUserStore(),
         items() {
             return [
                 {
@@ -76,9 +81,20 @@ export default {
                 },
                 {
                     name: `Lists ${this.stats ? this.stats.listCount : ''}`,
+                },
+                {
+                    name: `Following ${this.stats ? this.stats.followingCount : ''}`
                 }
             ];
+        },
+        followMessage() { return this.isUserFollowing ? 'Following' : 'Follow' }
+    },
+    async mounted() {
+        if(this.userStore.isUserLoggedIn) {
+            this.isUserFollowing = (await UserService.isUserFollowing(this.userStore.user.user_id, this.$route.params.userId)).data
         }
+        this.user = (await UserService.getUser(this.$route.params.userId)).data
+        this.stats = (await UserService.getStats(this.$route.params.userId)).data
     },
     methods: {
         navigateTo(route) {
@@ -103,6 +119,17 @@ export default {
                     })
                     break
             }
+        },
+        async followUser() {
+            if(this.isUserFollowing) {
+                const response = await UserService.unfollowUser(this.userStore.user.user_id, this.$route.params.userId)
+            } else {
+                const response = await UserService.followUser({
+                    userId: this.userStore.user.user_id,
+                    followedUserId: this.$route.params.userId
+                })
+            }
+            this.isUserFollowing = !this.isUserFollowing
         }
     }
 }
