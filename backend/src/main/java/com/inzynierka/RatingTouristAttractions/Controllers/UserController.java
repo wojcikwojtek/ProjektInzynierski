@@ -1,5 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Dtos.UserDto;
 import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
@@ -83,6 +84,7 @@ public class UserController {
                 user.getReviews().size(),
                 user.getLists().size(),
                 user.getFollowedUsers().size(),
+                userRepository.countFollowers(id),
                 recentlyReviewed
         );
         return ResponseEntity.status(HttpStatus.OK).body(userStats);
@@ -102,6 +104,18 @@ public class UserController {
         User followedUser = userRepository.findById(userId).orElse(null);
         if (user == null || followedUser == null) return false;
         return user.getFollowedUsers().contains(followedUser);
+    }
+
+    @GetMapping("{id}/getfollowers/{userId}")
+    ResponseEntity<?> getUserFollowers(@PathVariable long id, @PathVariable long userId) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        List<User> followers = userRepository.findFollowers(id);
+        List<UserDto> followerDtos = new ArrayList<>();
+        for(User follower : followers) {
+            followerDtos.add(new UserDto(follower, this.isUserFollowing(userId, follower.getUser_id())));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(followerDtos);
     }
 
     @PostMapping("/register")

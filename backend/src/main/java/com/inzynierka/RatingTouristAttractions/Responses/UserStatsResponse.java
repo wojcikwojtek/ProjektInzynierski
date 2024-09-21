@@ -12,12 +12,14 @@ public class UserStatsResponse {
     private int reviewCount;
     private int listCount;
     private int followingCount;
+    private int followersCount;
     private List<ReviewDto> recentlyReviewed;
 
-    public UserStatsResponse(int reviewCount, int listCount, int followingCount, List<ReviewDto> recentlyReviewed) {
+    public UserStatsResponse(int reviewCount, int listCount, int followingCount, int followersCount, List<ReviewDto> recentlyReviewed) {
         this.reviewCount = reviewCount;
         this.listCount = listCount;
         this.followingCount = followingCount;
+        this.followersCount = followersCount;
         this.recentlyReviewed = recentlyReviewed;
     }
 }

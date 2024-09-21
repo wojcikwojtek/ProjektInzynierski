@@ -84,6 +84,9 @@ export default {
                 },
                 {
                     name: `Following ${this.stats ? this.stats.followingCount : ''}`
+                },
+                {
+                    name: `Followers ${this.stats ? this.stats.followersCount : ''}`
                 }
             ];
         },
@@ -118,6 +121,15 @@ export default {
                         }
                     })
                     break
+                case 2:
+                    break
+                case 3:
+                    this.navigateTo({
+                        name: 'userFollowers',
+                        params: {
+                            userId: this.$route.params.userId
+                        }
+                    })
             }
         },
         async followUser() {
