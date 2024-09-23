@@ -19,6 +19,12 @@ export default {
     isUserFollowing(id, followedUserId) {
         return Api().get('users/' + id + '/isfollowing/' + followedUserId)
     },
+    getFollowers(id, userId) {
+        return Api().get('users/' + id + '/getfollowers/' + userId)
+    },
+    getFollowing(id, userId) {
+        return Api().get('users/' + id + '/getfollowing/' + userId)
+    },
     followUser(data) {
         return Api().post('users/follow', data)
     },

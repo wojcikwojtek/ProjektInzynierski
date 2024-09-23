@@ -46,11 +46,18 @@
                 <v-card 
                     class="mx-auto"
                     variant="outlined"
-                    :title="comment.user.login"
                     :subtitle="comment.publicationDate"
                 >
                     <template v-slot:prepend>
                         <v-icon color="primary" icon="mdi-account"></v-icon>
+                    </template>
+                    <template v-slot:title>
+                        <span class="link" @click="navigateTo({
+                            name: 'profile',
+                            params: {
+                                userId: comment.user.user_id
+                            }
+                        })">{{ comment.user.login }}</span>
                     </template>
                     <v-card-text>{{ comment.contents }}</v-card-text>
                 </v-card>
@@ -134,5 +141,8 @@ export default {
     width: 100%;
     height: 2px; 
     background-color: #000; 
+}
+.link{
+    cursor: pointer;
 }
 </style>

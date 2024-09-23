@@ -60,6 +60,11 @@ const router = createRouter({
       component: UserReviews
     },
     {
+      path: '/users/:userId/following',
+      name: 'userFollowing',
+      component: ViewFollowers
+    },
+    {
       path: '/users/:userId/followers',
       name: 'userFollowers',
       component: ViewFollowers

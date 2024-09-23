@@ -64,6 +64,7 @@
 <script>
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/userStore';
+import { onBeforeRouteUpdate } from 'vue-router';
 export default {
     data () {
         return {
@@ -99,6 +100,15 @@ export default {
         this.user = (await UserService.getUser(this.$route.params.userId)).data
         this.stats = (await UserService.getStats(this.$route.params.userId)).data
     },
+    async beforeRouteUpdate(to, from) {
+        if(to.params.userId !== from.params.userId) {
+            if(this.userStore.isUserLoggedIn) {
+                this.isUserFollowing = (await UserService.isUserFollowing(this.userStore.user.user_id, to.params.userId)).data
+            }
+            this.user = (await UserService.getUser(to.params.userId)).data
+            this.stats = (await UserService.getStats(to.params.userId)).data
+        }
+    },
     methods: {
         navigateTo(route) {
             this.$router.push(route)
@@ -122,6 +132,12 @@ export default {
                     })
                     break
                 case 2:
+                    this.navigateTo({
+                        name: 'userFollowing',
+                        params: {
+                            userId: this.$route.params.userId
+                        }
+                    })
                     break
                 case 3:
                     this.navigateTo({
@@ -130,6 +146,7 @@ export default {
                             userId: this.$route.params.userId
                         }
                     })
+                    break
             }
         },
         async followUser() {

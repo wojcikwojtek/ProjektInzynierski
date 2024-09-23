@@ -118,6 +118,17 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(followerDtos);
     }
 
+    @GetMapping("{id}/getfollowing/{userId}")
+    ResponseEntity<?> getUserFollowing(@PathVariable long id, @PathVariable long userId) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        List<UserDto> followedUsersDtos = new ArrayList<>();
+        for(User followedUser : user.getFollowedUsers()) {
+            followedUsersDtos.add(new UserDto(followedUser, this.isUserFollowing(userId, followedUser.getUser_id())));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(followedUsersDtos);
+    }
+
     @PostMapping("/register")
     ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         if(userRepository.findByLogin(registerRequest.getLogin()) != null) {
