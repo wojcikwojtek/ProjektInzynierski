@@ -129,6 +129,23 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(followedUsersDtos);
     }
 
+    @GetMapping("/{id}/recentreviews")
+    ResponseEntity<?> getFollowedUsersRecentReviews(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        List<ReviewDto> recentlyReviewed = new ArrayList<>();
+        for(User followedUser : user.getFollowedUsers()) {
+            Review recentReview = followedUser.getReviews().getLast();
+            recentlyReviewed.add(new ReviewDto(
+                    recentReview,
+                    recentReview.getAttraction().getAttraction_id(),
+                    recentReview.getAttraction().getName(),
+                    recentReview.getAttraction().getImageUrl()
+            ));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(recentlyReviewed);
+    }
+
     @PostMapping("/register")
     ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
         if(userRepository.findByLogin(registerRequest.getLogin()) != null) {

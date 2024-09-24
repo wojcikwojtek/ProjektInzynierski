@@ -25,6 +25,9 @@ export default {
     getFollowing(id, userId) {
         return Api().get('users/' + id + '/getfollowing/' + userId)
     },
+    getFollowedUsersRecentReviews(id) {
+        return Api().get('users/' + id + '/recentreviews')
+    },
     followUser(data) {
         return Api().post('users/follow', data)
     },
