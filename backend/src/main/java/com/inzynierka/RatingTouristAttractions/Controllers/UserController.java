@@ -1,10 +1,11 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Dtos.UserDto;
 import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
-import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
+import com.inzynierka.RatingTouristAttractions.Dtos.ReviewWithImageDto;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.FollowUserRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
@@ -14,8 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/users")
@@ -44,10 +48,10 @@ public class UserController {
     ResponseEntity<?> getUserReviews(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        List<ReviewDto> reviewsDto = new ArrayList<>();
+        List<ReviewWithImageDto> reviewsDto = new ArrayList<>();
         for (Review review : user.getReviews()) {
-            reviewsDto.add(new ReviewDto(
-                    review,
+            reviewsDto.add(new ReviewWithImageDto(
+                    new ReviewDto(review),
                     review.getAttraction().getAttraction_id(),
                     review.getAttraction().getName(),
                     review.getAttraction().getImageUrl()
@@ -68,12 +72,12 @@ public class UserController {
     ResponseEntity<?> getUserStats(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        List<ReviewDto> recentlyReviewed = new ArrayList<>();
+        List<ReviewWithImageDto> recentlyReviewed = new ArrayList<>();
         int index = user.getReviews().size() - 1;
         for(int i = 0; i <=4; i++) {
             if(index < 0) break;
-            recentlyReviewed.add(new ReviewDto(
-                    user.getReviews().get(index),
+            recentlyReviewed.add(new ReviewWithImageDto(
+                    new ReviewDto(user.getReviews().get(index)),
                     user.getReviews().get(index).getAttraction().getAttraction_id(),
                     user.getReviews().get(index).getAttraction().getName(),
                     user.getReviews().get(index).getAttraction().getImageUrl()
@@ -133,11 +137,11 @@ public class UserController {
     ResponseEntity<?> getFollowedUsersRecentReviews(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        List<ReviewDto> recentlyReviewed = new ArrayList<>();
+        List<ReviewWithImageDto> recentlyReviewed = new ArrayList<>();
         for(User followedUser : user.getFollowedUsers()) {
             Review recentReview = followedUser.getReviews().getLast();
-            recentlyReviewed.add(new ReviewDto(
-                    recentReview,
+            recentlyReviewed.add(new ReviewWithImageDto(
+                    new ReviewDto(recentReview),
                     recentReview.getAttraction().getAttraction_id(),
                     recentReview.getAttraction().getName(),
                     recentReview.getAttraction().getImageUrl()

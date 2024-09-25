@@ -1,6 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Responses;
 
-import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
+import com.inzynierka.RatingTouristAttractions.Dtos.ReviewWithImageDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +13,9 @@ public class UserStatsResponse {
     private int listCount;
     private int followingCount;
     private int followersCount;
-    private List<ReviewDto> recentlyReviewed;
+    private List<ReviewWithImageDto> recentlyReviewed;
 
-    public UserStatsResponse(int reviewCount, int listCount, int followingCount, int followersCount, List<ReviewDto> recentlyReviewed) {
+    public UserStatsResponse(int reviewCount, int listCount, int followingCount, int followersCount, List<ReviewWithImageDto> recentlyReviewed) {
         this.reviewCount = reviewCount;
         this.listCount = listCount;
         this.followingCount = followingCount;

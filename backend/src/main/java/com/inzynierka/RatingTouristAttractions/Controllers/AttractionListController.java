@@ -1,5 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Dtos.AttractionListDto;
 import com.inzynierka.RatingTouristAttractions.Entities.*;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionListRepository;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionPostionRepository;
@@ -41,7 +42,26 @@ public class AttractionListController {
     List<AttractionList> getAllLists() { return attractionListRepository.findAll(); }
 
     @GetMapping("/{id}")
-    AttractionList getListById(@PathVariable long id) { return attractionListRepository.findById(id).orElse(null); }
+    AttractionListDto getListById(@PathVariable long id) {
+        AttractionList attractionList = attractionListRepository.findById(id).orElse(null);
+        if(attractionList == null) return null;
+        String dateTime = attractionList.getPublicationDate()
+                .format(
+                        DateTimeFormatter
+                                .ofLocalizedDateTime(FormatStyle.SHORT)
+                                .withLocale(
+                                        new Locale("pl", "PL")
+                                )
+                );
+        return new AttractionListDto(
+                attractionList.getList_id(),
+                attractionList.getName(),
+                attractionList.getDescription(),
+                dateTime,
+                attractionList.getSize(),
+                attractionList.getUser()
+        );
+    }
 
     @GetMapping("/{id}/attractions")
     List<AttractionPosition> getListAttractions(@PathVariable long id) {
@@ -65,18 +85,8 @@ public class AttractionListController {
         User user = userRepository.findById(listRequest.getUserId()).orElse(null);
         if(user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 
-        String dateTime = LocalDateTime
-                .now().format(
-                        DateTimeFormatter
-                                .ofLocalizedDateTime(FormatStyle.SHORT)
-                                .withLocale(
-                                        new Locale("pl", "PL")
-                                )
-                );
-
         AttractionList list = new AttractionList(
                 listRequest.getName(),
-                dateTime,
                 listRequest.getDescription(),
                 user
         );

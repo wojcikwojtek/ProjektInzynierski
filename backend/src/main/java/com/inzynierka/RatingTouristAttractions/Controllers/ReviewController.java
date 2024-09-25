@@ -1,5 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
 import com.inzynierka.RatingTouristAttractions.Entities.Comment;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
@@ -38,7 +39,11 @@ public class ReviewController {
     List<Review> getAllReviews() { return reviewRepository.findAll(); }
 
     @GetMapping("/{id}")
-    Review getReviewById(@PathVariable long id) { return reviewRepository.findById(id).orElse(null); }
+    ReviewDto getReviewById(@PathVariable long id) {
+        Review review = reviewRepository.findById(id).orElse(null);
+        if(review == null) return null;
+        return new ReviewDto(review);
+    }
 
     @GetMapping("/{id}/likecount")
     int getReviewLikeCount(@PathVariable long id) {
@@ -78,7 +83,6 @@ public class ReviewController {
         Review review = new Review(
                 reviewRequest.getRating(),
                 reviewRequest.getContents(),
-                dateTime,
                 user,
                 attraction
         );

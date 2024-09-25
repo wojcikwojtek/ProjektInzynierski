@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,7 +24,7 @@ public class AttractionList {
     private String name;
 
     @Column(name = "publication_date")
-    private String publicationDate;
+    private LocalDateTime publicationDate;
 
     @Column(name = "description", columnDefinition="TEXT")
     private String description;
@@ -40,13 +42,13 @@ public class AttractionList {
 
     @JsonIgnore
     @OneToMany(mappedBy = "list")
-    private List<AttractionPosition> attractions;
+    private List<AttractionPosition> attractions = new ArrayList<>();
 
     public AttractionList() {}
 
-    public AttractionList(String name, String publicationDate, String description, User user) {
+    public AttractionList(String name, String description, User user) {
         this.name = name;
-        this.publicationDate = publicationDate;
+        this.publicationDate = LocalDateTime.now();
         this.description = description;
         this.user = user;
         this.size = attractions.size();

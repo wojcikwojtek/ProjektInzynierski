@@ -1,5 +1,6 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository;
@@ -36,7 +37,10 @@ public class AttractionController {
     ResponseEntity<?> getAttractionReviews(@PathVariable long id) {
         Attraction attraction = attractionRepository.findById(id).orElse(null);
         if (attraction == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attraction not found");
-        List reviews = attraction.getReviews();
+        List<ReviewDto> reviews = new ArrayList<>();
+        for (Review review : attraction.getReviews()) {
+            reviews.add(new ReviewDto(review));
+        }
         return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 

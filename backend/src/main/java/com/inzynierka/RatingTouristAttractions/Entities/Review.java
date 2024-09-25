@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -25,7 +26,7 @@ public class Review {
     private String contents;
 
     @Column(name = "publication_date")
-    private String publicationDate;
+    private LocalDateTime publicationDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,10 +47,10 @@ public class Review {
 
     public Review() {}
 
-    public Review(double rating, String contents, String publicationDate, User user, Attraction attraction) {
+    public Review(double rating, String contents, User user, Attraction attraction) {
         this.rating = rating;
         this.contents = contents;
-        this.publicationDate = publicationDate;
+        this.publicationDate = LocalDateTime.now();
         this.user = user;
         this.attraction = attraction;
     }
