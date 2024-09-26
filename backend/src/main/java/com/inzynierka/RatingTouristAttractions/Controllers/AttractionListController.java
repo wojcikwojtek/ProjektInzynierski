@@ -80,6 +80,26 @@ public class AttractionListController {
         return attractionList.getLikes().size();
     }
 
+    @GetMapping("/{index}/mostpopular")
+    List<AttractionList> getTenMostPopularLists(@PathVariable int index) {
+        List<AttractionList> attractionLists = attractionListRepository.findAll();
+        if (attractionLists.isEmpty() || attractionLists.size() <= index) return new ArrayList<>();
+        attractionLists = attractionLists
+                .stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
+                .collect(Collectors.toList());
+        if(index + 10 > attractionLists.size()) return attractionLists.subList(index, attractionLists.size());
+        return attractionLists.subList(index, index + 10);
+    }
+
+    @GetMapping("/{index}/newest")
+    List<AttractionList> getTenNewestLists(@PathVariable int index) {
+        List<AttractionList> attractionLists = attractionListRepository.findAllOrderByPublicationDate();
+        if (attractionLists.isEmpty() || attractionLists.size() <= index) return new ArrayList<>();
+        if(index + 10 > attractionLists.size()) return attractionLists.subList(index, attractionLists.size());
+        return attractionLists.subList(index, index + 10);
+    }
+
     @PostMapping("/create")
     ResponseEntity<?> createList(@RequestBody ListRequest listRequest) {
         User user = userRepository.findById(listRequest.getUserId()).orElse(null);

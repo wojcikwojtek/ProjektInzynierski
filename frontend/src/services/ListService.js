@@ -10,6 +10,12 @@ export default {
     getLikeCount(id) {
         return Api().get('lists/' + id + '/likecount')        
     },
+    getTenMostPopular(index) {
+        return Api().get('lists/' + index + '/mostpopular')
+    },
+    getTenNewest(index) {
+        return Api().get('lists/' + index + '/newest')
+    },
     addToList(data) {
         return Api().post('lists/add', data)
     },

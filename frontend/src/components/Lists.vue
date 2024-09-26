@@ -13,17 +13,37 @@
                         <v-tab value="three">Friends lists</v-tab>
                     </v-tabs>
                 </v-toolbar>
+                <v-tabs-window v-model="tab">
+                    <v-tabs-window-item value="one">
+                        <ListInfiniteScroll
+                            v-model:tab="tab"
+                        ></ListInfiniteScroll>
+                    </v-tabs-window-item>
+                    <v-tabs-window-item value="two">
+                        <ListInfiniteScroll
+                            v-model:tab="tab"
+                        ></ListInfiniteScroll>
+                    </v-tabs-window-item>
+                    <v-tabs-window-item value="three">
+                        Dupa3
+                    </v-tabs-window-item>
+                </v-tabs-window>
             </v-sheet>
         </v-col>
     </v-row>
 </template>
 
 <script>
+import ListInfiniteScroll from './ListInfiniteScroll.vue';
+
 export default {
     data() {
         return {
             tab: null
         }
+    },
+    components: {
+        ListInfiniteScroll
     }
 }
 </script>
