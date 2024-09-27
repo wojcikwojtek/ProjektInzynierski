@@ -16,6 +16,9 @@ export default {
     getTenNewest(index) {
         return Api().get('lists/' + index + '/newest')
     },
+    getTenFriendsLists(index, userId) {
+        return Api().get('lists/' + index + '/friendslists/' + userId)
+    },
     addToList(data) {
         return Api().post('lists/add', data)
     },

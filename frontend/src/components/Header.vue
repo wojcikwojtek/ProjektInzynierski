@@ -16,6 +16,9 @@
         <v-spacer></v-spacer>
         <v-spacer></v-spacer>
         <v-toolbar-items>
+            <v-btn @click="navigateTo({name: 'lists'})">
+                Lists
+            </v-btn>
             <v-btn v-if="!isUserLoggedIn" flat @click="navigateTo({name: 'login'})">
                 Login
             </v-btn>
@@ -62,7 +65,7 @@ export default {
             this.$router.push(route)
         },
         logout () {
-            this.userStore.setUser(null)
+            this.userStore.logout()
             this.$router.push({name: "home"})
         },
         menuOptions(i) {

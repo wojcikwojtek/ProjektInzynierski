@@ -1,8 +1,8 @@
 <template>
     <v-row no-gutters>
-        <v-col cols="1" class="pa-2">
+        <v-col cols="2" class="pa-2">
         </v-col>
-        <v-col cols="10" class="pa-4">
+        <v-col cols="8" class="pa-4">
             <v-sheet border="md">
                 <v-toolbar density="compact" class="bg-cyan text-white">
                     <v-tabs
@@ -24,8 +24,10 @@
                             v-model:tab="tab"
                         ></ListInfiniteScroll>
                     </v-tabs-window-item>
-                    <v-tabs-window-item value="three">
-                        Dupa3
+                    <v-tabs-window-item value="three" v-if="userStore.isUserLoggedIn">
+                        <ListInfiniteScroll
+                            v-model:tab="tab"
+                        ></ListInfiniteScroll>
                     </v-tabs-window-item>
                 </v-tabs-window>
             </v-sheet>
@@ -34,6 +36,7 @@
 </template>
 
 <script>
+import { useUserStore } from '@/stores/userStore';
 import ListInfiniteScroll from './ListInfiniteScroll.vue';
 
 export default {
@@ -44,6 +47,9 @@ export default {
     },
     components: {
         ListInfiniteScroll
+    },
+    computed: {
+        userStore: () => useUserStore()
     }
 }
 </script>

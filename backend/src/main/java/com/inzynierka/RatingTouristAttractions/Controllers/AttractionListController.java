@@ -100,6 +100,21 @@ public class AttractionListController {
         return attractionLists.subList(index, index + 10);
     }
 
+    @GetMapping("/{index}/friendslists/{userId}")
+    List<AttractionList> getTenFriendsLists(@PathVariable long userId, @PathVariable int index) {
+        User user = userRepository.findById(userId).orElse(null);
+        if(user == null) return new ArrayList<>();
+        List<AttractionList> friendsLists = user.getFollowedUsers().stream()
+                .flatMap(followedUser -> followedUser.getLists().stream())
+                .collect(Collectors.toList());
+        if(friendsLists.isEmpty() || friendsLists.size() <= index) return new ArrayList<>();
+        friendsLists = friendsLists.stream()
+                .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
+                .collect(Collectors.toList());
+        if(index + 10 > friendsLists.size()) return friendsLists.subList(index, friendsLists.size());
+        return  friendsLists.subList(index, index + 10);
+    }
+
     @PostMapping("/create")
     ResponseEntity<?> createList(@RequestBody ListRequest listRequest) {
         User user = userRepository.findById(listRequest.getUserId()).orElse(null);

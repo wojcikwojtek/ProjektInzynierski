@@ -13,24 +13,20 @@
                     v-for="element in recentReviews"
                     :key="element.review.review_id"
                 >
-                <div>
-                    <v-avatar 
-                        class="pr-2"
-                        rounded="0"
-                        size="175"
-                    >
-                        <v-img 
-                            :src="element.imageUrl"
-                            class="hover-image"
-                            @click="navigateTo({
-                                name: 'reviewComments',
-                                params: {
-                                    attractionId: element.attractionId,
-                                    reviewId: element.review.review_id
-                                }
-                            })"
-                        ></v-img>
-                    </v-avatar>
+                <div class="pr-2">
+                    <v-img 
+                        :src="element.imageUrl"
+                        :width="220"
+                        aspect-ratio="16/9"
+                        class="hover-image"
+                        @click="navigateTo({
+                            name: 'reviewComments',
+                            params: {
+                                attractionId: element.attractionId,
+                                reviewId: element.review.review_id
+                            }
+                        })"
+                    ></v-img>
                     <div class="d-flex justify-center">
                         <v-rating
                             v-model="element.review.rating"

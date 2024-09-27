@@ -11,6 +11,7 @@ import '@mdi/font/css/materialdesignicons.css';
 
 import App from './App.vue'
 import router from './router'
+import { useUserStore } from './stores/userStore'
 
 const vuetify = createVuetify({
     components,
@@ -27,3 +28,6 @@ app.use(router)
 app.use(vuetify)
 
 app.mount('#app')
+
+const userStore = useUserStore()
+userStore.initializeUser()
