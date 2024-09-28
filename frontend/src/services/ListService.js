@@ -4,6 +4,9 @@ export default {
     getList(id) {
         return Api().get('lists/' + id)
     },
+    getListWithImages(id) {
+        return Api().get('lists/' + id + '/images')
+    },
     getListEntries(id) {
         return Api().get('lists/' + id + '/attractions')
     },

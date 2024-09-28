@@ -7,19 +7,21 @@ import lombok.Setter;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.List;
 import java.util.Locale;
 
 @Getter
 @Setter
-public class AttractionListDto {
+public class AttractionListWithImagesDto {
     private long list_id;
     private String name;
     private String description;
     private String publicationDate;
     private int size;
     private User user;
+    private List<String> imagesUrls;
 
-    public AttractionListDto(AttractionList attractionList) {
+    public AttractionListWithImagesDto(AttractionList attractionList, List<String> imagesUrls) {
         this.list_id = attractionList.getList_id();
         this.name = attractionList.getName();
         this.description = attractionList.getDescription();
@@ -33,5 +35,6 @@ public class AttractionListDto {
                 );;
         this.size = attractionList.getSize();
         this.user = attractionList.getUser();
+        this.imagesUrls = imagesUrls;
     }
 }

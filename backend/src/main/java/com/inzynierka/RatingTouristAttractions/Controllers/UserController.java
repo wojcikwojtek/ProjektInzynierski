@@ -1,8 +1,10 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
+import com.inzynierka.RatingTouristAttractions.Dtos.AttractionListWithImagesDto;
 import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Dtos.UserDto;
 import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
+import com.inzynierka.RatingTouristAttractions.Entities.AttractionPosition;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Dtos.ReviewWithImageDto;
@@ -20,6 +22,7 @@ import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -64,8 +67,20 @@ public class UserController {
     ResponseEntity<?> getUserLists(@PathVariable long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        List<AttractionList> lists = user.getLists();
-        return ResponseEntity.status(HttpStatus.OK).body(lists);
+        List<AttractionListWithImagesDto> listsWithImages = new ArrayList<>();
+        for(AttractionList list : user.getLists()) {
+            List<AttractionPosition> attractions = list.getAttractions()
+                    .stream()
+                    .sorted((o1, o2) -> Integer.compare(o1.getPosition(), o2.getPosition()))
+                    .collect(Collectors.toList());
+            List<String> topFourImages = new ArrayList<>();
+            for(int i = 0; i < 4; i++) {
+                if(i >= attractions.size()) break;
+                topFourImages.add(attractions.get(i).getAttraction().getImageUrl());
+            }
+            listsWithImages.add(new AttractionListWithImagesDto(list, topFourImages));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(listsWithImages);
     }
 
     @GetMapping("/{id}/stats")

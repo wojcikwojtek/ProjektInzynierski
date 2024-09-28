@@ -1,6 +1,7 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
 import com.inzynierka.RatingTouristAttractions.Dtos.AttractionListDto;
+import com.inzynierka.RatingTouristAttractions.Dtos.AttractionListWithImagesDto;
 import com.inzynierka.RatingTouristAttractions.Entities.*;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionListRepository;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionPostionRepository;
@@ -38,6 +39,19 @@ public class AttractionListController {
         this.attractionPostionRepository = attractionPostionRepository;
     }
 
+    private AttractionListWithImagesDto getListWithImages(AttractionList attractionList) {
+        List<AttractionPosition> attractions = attractionList.getAttractions()
+                .stream()
+                .sorted((o1, o2) -> Integer.compare(o1.getPosition(), o2.getPosition()))
+                .collect(Collectors.toList());
+        List<String> topFourImages = new ArrayList<>();
+        for(int i = 0; i < 4; i++) {
+            if(i >= attractions.size()) break;
+            topFourImages.add(attractions.get(i).getAttraction().getImageUrl());
+        }
+        return new AttractionListWithImagesDto(attractionList, topFourImages);
+    }
+
     @GetMapping
     List<AttractionList> getAllLists() { return attractionListRepository.findAll(); }
 
@@ -45,22 +59,14 @@ public class AttractionListController {
     AttractionListDto getListById(@PathVariable long id) {
         AttractionList attractionList = attractionListRepository.findById(id).orElse(null);
         if(attractionList == null) return null;
-        String dateTime = attractionList.getPublicationDate()
-                .format(
-                        DateTimeFormatter
-                                .ofLocalizedDateTime(FormatStyle.SHORT)
-                                .withLocale(
-                                        new Locale("pl", "PL")
-                                )
-                );
-        return new AttractionListDto(
-                attractionList.getList_id(),
-                attractionList.getName(),
-                attractionList.getDescription(),
-                dateTime,
-                attractionList.getSize(),
-                attractionList.getUser()
-        );
+        return new AttractionListDto(attractionList);
+    }
+
+    @GetMapping("/{id}/images")
+    AttractionListWithImagesDto getListWithImages(@PathVariable long id) {
+        AttractionList attractionList = attractionListRepository.findById(id).orElse(null);
+        if(attractionList == null) return null;
+        return this.getListWithImages(attractionList);
     }
 
     @GetMapping("/{id}/attractions")
@@ -81,27 +87,35 @@ public class AttractionListController {
     }
 
     @GetMapping("/{index}/mostpopular")
-    List<AttractionList> getTenMostPopularLists(@PathVariable int index) {
+    List<AttractionListWithImagesDto> getTenMostPopularLists(@PathVariable int index) {
         List<AttractionList> attractionLists = attractionListRepository.findAll();
         if (attractionLists.isEmpty() || attractionLists.size() <= index) return new ArrayList<>();
         attractionLists = attractionLists
                 .stream()
                 .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
                 .collect(Collectors.toList());
-        if(index + 10 > attractionLists.size()) return attractionLists.subList(index, attractionLists.size());
-        return attractionLists.subList(index, index + 10);
+        List<AttractionListWithImagesDto> listWithImages = new ArrayList<>();
+        for(int i = index; i < index + 10; i++) {
+            if(i >= attractionLists.size()) break;
+            listWithImages.add(getListWithImages(attractionLists.get(i)));
+        }
+        return listWithImages;
     }
 
     @GetMapping("/{index}/newest")
-    List<AttractionList> getTenNewestLists(@PathVariable int index) {
+    List<AttractionListWithImagesDto> getTenNewestLists(@PathVariable int index) {
         List<AttractionList> attractionLists = attractionListRepository.findAllOrderByPublicationDate();
         if (attractionLists.isEmpty() || attractionLists.size() <= index) return new ArrayList<>();
-        if(index + 10 > attractionLists.size()) return attractionLists.subList(index, attractionLists.size());
-        return attractionLists.subList(index, index + 10);
+        List<AttractionListWithImagesDto> listWithImages = new ArrayList<>();
+        for(int i = index; i < index + 10; i++) {
+            if(i >= attractionLists.size()) break;
+            listWithImages.add(getListWithImages(attractionLists.get(i)));
+        }
+        return listWithImages;
     }
 
     @GetMapping("/{index}/friendslists/{userId}")
-    List<AttractionList> getTenFriendsLists(@PathVariable long userId, @PathVariable int index) {
+    List<AttractionListWithImagesDto> getTenFriendsLists(@PathVariable long userId, @PathVariable int index) {
         User user = userRepository.findById(userId).orElse(null);
         if(user == null) return new ArrayList<>();
         List<AttractionList> friendsLists = user.getFollowedUsers().stream()
@@ -111,8 +125,12 @@ public class AttractionListController {
         friendsLists = friendsLists.stream()
                 .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
                 .collect(Collectors.toList());
-        if(index + 10 > friendsLists.size()) return friendsLists.subList(index, friendsLists.size());
-        return  friendsLists.subList(index, index + 10);
+        List<AttractionListWithImagesDto> listWithImages = new ArrayList<>();
+        for(int i = index; i < index + 10; i++) {
+            if(i >= friendsLists.size()) break;
+            listWithImages.add(getListWithImages(friendsLists.get(i)));
+        }
+        return listWithImages;
     }
 
     @PostMapping("/create")

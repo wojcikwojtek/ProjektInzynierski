@@ -66,6 +66,12 @@
                         <v-card
                             variant="outlined"
                             v-if="!element.hidden"
+                            hover
+                            @click="navigateTo({
+                                name: 'attraction',
+                                params: {
+                                    attractionId: element.attraction.attraction_id
+                                }})"
                         >
                             <div class="d-flex flex-no-wrap justify-space-between">
                                 <div>
@@ -88,7 +94,7 @@
                                             class="bg-cyan text-white"
                                             text="Read review"
                                             size="small"
-                                            @click="navigateTo({
+                                            @click.stop="navigateTo({
                                                 name: 'reviewComments',
                                                 params: {
                                                     attractionId: element.attraction.attraction_id,
@@ -100,7 +106,7 @@
                                             class="bg-red text-white"
                                             text="Delete"
                                             size="small"
-                                            @click="addToDeleted(element)"></v-btn>
+                                            @click.stop="addToDeleted(element)"></v-btn>
                                     </v-card-text>
                                 </div>
                                 <v-avatar 

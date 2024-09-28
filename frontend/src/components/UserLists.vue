@@ -5,7 +5,6 @@
         <v-col cols="6" v-if="listInfo" class="pa-2">
             <div v-for="list in listInfo" :key="list.list_id" class="pa-1">
                 <v-card
-                    :title="list.name"
                     variant="outlined"
                     hover
                     @click="navigateTo({
@@ -15,19 +14,42 @@
                         }
                     })"
                 >
-                    <template v-slot:subtitle>
-                        <div class="link" 
-                            @click="navigateTo({
-                                name: 'profile',
-                                params: {
-                                    userId: list.user.user_id
-                                }
-                            })">
-                            <v-icon color="primary" icon="mdi-account"></v-icon>
-                            <span class="pa-1">{{ list.user.login }}</span>
+                    <div class="d-flex flex-no-wrap justify-space-between">
+                        <div>
+                            <v-card-title>{{ list.name }}</v-card-title>
+                            <v-card-subtitle>
+                                <div class="link" 
+                                    @click.stop="navigateTo({
+                                        name: 'profile',
+                                        params: {
+                                            userId: list.user.user_id
+                                        }
+                                    })">
+                                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                                        <span class="pa-1">{{ list.user.login }}</span>
+                                </div>
+                            </v-card-subtitle>
+                            <v-card-text>{{ list.description }}</v-card-text>
                         </div>
-                    </template>
-                    <v-card-text>{{ list.description }}</v-card-text>
+                        <div style="width: 130px;" class="pr-4 pb-2">
+                            <v-row align="center" no-gutters>
+                                <v-col
+                                    v-for="n in 4"
+                                    :key="n"
+                                    cols="6"
+                                >   
+                                    <v-avatar
+                                        rounded="0"
+                                        class="pl-2 pt-2"
+                                        size="60"
+                                    >
+                                        <v-img v-if="n-1 >= list.imagesUrls.length" :src="placeholderImageUrl"></v-img>
+                                        <v-img v-else :src="list.imagesUrls[n-1]"></v-img>
+                                    </v-avatar>
+                                </v-col>
+                            </v-row>
+                        </div>
+                    </div>
                 </v-card>
             </div>
         </v-col>
@@ -40,7 +62,8 @@ import UserService from '@/services/UserService';
 export default {
     data () {
         return {
-            listInfo: null
+            listInfo: null,
+            placeholderImageUrl: "https://t3.ftcdn.net/jpg/02/68/55/60/360_F_268556012_c1WBaKFN5rjRxR2eyV33znK4qnYeKZjm.jpg"
         }
     },
     async mounted() {

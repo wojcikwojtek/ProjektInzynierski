@@ -6,6 +6,7 @@ import { useUserStore } from '@/stores/userStore';
 
 const tab = defineModel('tab')
 const items = ref([])
+const placeholderImageUrl = ref("https://t3.ftcdn.net/jpg/02/68/55/60/360_F_268556012_c1WBaKFN5rjRxR2eyV33znK4qnYeKZjm.jpg")
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -47,32 +48,56 @@ function navigateTo(route) {
         mode="manual"
         @load="load"
     >
-        <template v-for="(item, index) in items" :key="item" class="pa-2">
-            <v-card
-                :title="item.name"
-                variant="outlined"
-                hover
-                @click="navigateTo({
-                    name: 'list',
-                    params: {
-                        listId: item.list_id
-                    }
-                })"
-            >
-                <template v-slot:subtitle>
-                    <div class="link" 
-                        @click="navigateTo({
-                            name: 'profile',
-                            params: {
-                                userId: item.user.user_id
-                            }
-                        })">
-                        <v-icon color="primary" icon="mdi-account"></v-icon>
-                        <span class="pa-1">{{ item.user.login }}</span>
+        <template v-for="(item, index) in items" :key="item">
+            <div class="pr-4 pl-4 pb-2">
+                <v-card
+                    variant="outlined"
+                    hover
+                    @click="navigateTo({
+                        name: 'list',
+                        params: {
+                            listId: item.list_id
+                        }
+                    })"
+                >
+                    <div class="d-flex flex-no-wrap justify-space-between">
+                        <div>
+                            <v-card-title>{{ item.name }}</v-card-title>
+                            <v-card-subtitle>
+                                <div class="link" 
+                                    @click.stop="navigateTo({
+                                        name: 'profile',
+                                        params: {
+                                            userId: item.user.user_id
+                                        }
+                                    })">
+                                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                                        <span class="pa-1">{{ item.user.login }}</span>
+                                </div>
+                            </v-card-subtitle>
+                            <v-card-text>{{ item.description }}</v-card-text>
+                        </div>
+                        <div style="width: 130px;" class="pr-4 pb-2">
+                            <v-row align="center" no-gutters>
+                                <v-col
+                                    v-for="n in 4"
+                                    :key="n"
+                                    cols="6"
+                                >   
+                                    <v-avatar
+                                        rounded="0"
+                                        class="pl-2 pt-2"
+                                        size="60"
+                                    >
+                                        <v-img v-if="n-1 >= item.imagesUrls.length" :src="placeholderImageUrl"></v-img>
+                                        <v-img v-else :src="item.imagesUrls[n-1]"></v-img>
+                                    </v-avatar>
+                                </v-col>
+                            </v-row>
+                        </div>
                     </div>
-                </template>
-                <v-card-text>{{ item.description }}</v-card-text>
-            </v-card>
+                </v-card>
+            </div>
         </template>
         <template v-slot:empty>
             <v-alert type="warning">No more items!</v-alert>
