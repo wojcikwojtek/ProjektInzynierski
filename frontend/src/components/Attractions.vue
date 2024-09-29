@@ -9,6 +9,7 @@
             single line
             v-model="searchedTerm"
             @click:append-inner="searchAttractions"
+            @keyup.enter="searchAttractions"
         ></v-text-field>
     </div>
     <div v-for="attraction in this.attractions" class="d-flex mx-auto w-50 pt-2">

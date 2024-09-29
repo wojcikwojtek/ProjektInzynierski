@@ -3,7 +3,7 @@
         <v-col cols="2" class="pa-2">
         </v-col>
         <v-col cols="8" class="pa-4">
-            <v-sheet border="md">
+            <div class="white elevation-5">
                 <v-toolbar density="compact" class="bg-cyan text-white">
                     <v-tabs
                         v-model="tab"
@@ -30,7 +30,7 @@
                         ></ListInfiniteScroll>
                     </v-tabs-window-item>
                 </v-tabs-window>
-            </v-sheet>
+            </div>
         </v-col>
     </v-row>
 </template>

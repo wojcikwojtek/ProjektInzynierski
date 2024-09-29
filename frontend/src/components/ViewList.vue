@@ -175,6 +175,7 @@ export default {
     },
     methods: {
         navigateTo(route) {
+            if(enabled) return
             this.$router.push(route)
         },
         findRating(attractionId, reviews) {

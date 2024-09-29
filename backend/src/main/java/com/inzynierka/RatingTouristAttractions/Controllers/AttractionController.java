@@ -9,11 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.*;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 
 @RestController
 @RequestMapping("/attractions")
@@ -46,7 +43,18 @@ public class AttractionController {
 
     @GetMapping("/search/{name}")
     List<Attraction> searchAttractionLike(@PathVariable String name) {
-        return attractionRepository.findByNameLike(name);
+        if(name.length() < 3) return new ArrayList<>();
+        List<Attraction> attractions = attractionRepository.findAll();
+        List<Attraction> foundAttractions = new ArrayList<>();
+        LevenshteinDistance distance = new LevenshteinDistance();
+        for (Attraction attraction : attractions) {
+            if(attraction.getName().contains(name) || distance.apply(name, attraction.getName()) <= 3
+                    || attraction.getCountry().contains(name) || distance.apply(name, attraction.getCountry()) <= 3
+                    || attraction.getCity().contains(name) || distance.apply(name, attraction.getCity()) <= 3) {
+                foundAttractions.add(attraction);
+            }
+        }
+        return foundAttractions;
     }
 
     @PostMapping("/add")
