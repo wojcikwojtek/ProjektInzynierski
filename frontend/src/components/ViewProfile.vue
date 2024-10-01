@@ -6,7 +6,9 @@
         <v-col v-if="stats" cols="8" class = "pl-2 pr-2 pt-2 pb-2">
             <div class="white elevation-5 pa-6">
             <div class="d-flex mb-6">
-                <v-avatar color="info" icon="mdi-account" size="100"></v-avatar>
+                <v-avatar size="100">
+                    <v-img :src="profilePic"></v-img>
+                </v-avatar>
                 <span class="text-h2 ma-2 pa-2 me-auto">{{ this.user.login }}</span>
                 <v-btn
                     v-if="userStore.isUserLoggedIn && userStore.user.user_id!=this.$route.params.userId"
@@ -91,7 +93,8 @@ export default {
                 }
             ];
         },
-        followMessage() { return this.isUserFollowing ? 'Following' : 'Follow' }
+        followMessage() { return this.isUserFollowing ? 'Following' : 'Follow' },
+        profilePic() { return `http://localhost:8080/rating-attractions/users/${this.$route.params.userId}/profilepic` }
     },
     async mounted() {
         if(this.userStore.isUserLoggedIn) {

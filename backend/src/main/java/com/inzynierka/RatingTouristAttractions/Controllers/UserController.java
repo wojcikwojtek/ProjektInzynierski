@@ -13,10 +13,15 @@ import com.inzynierka.RatingTouristAttractions.Requests.FollowUserRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
 import com.inzynierka.RatingTouristAttractions.Responses.UserStatsResponse;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
@@ -163,6 +168,16 @@ public class UserController {
             ));
         }
         return ResponseEntity.status(HttpStatus.OK).body(recentlyReviewed);
+    }
+
+    @GetMapping("/{id}/profilepic")
+    ResponseEntity<Resource> getUserProfilePic(@PathVariable long id) throws Exception {
+        //TODO: zrobic ze jesli nie ma takiego zdjecia to zwrocic jakies puste
+        Path path = Paths.get("src/main/resources/images/user/ProfilePic" + id + ".jpg");
+        Resource resource = new UrlResource(path.toUri());
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
     }
 
     @PostMapping("/register")

@@ -4,7 +4,7 @@
             append-inner-icon="mdi-magnify"
             density="comfortable"
             max-width="50%"
-            label="Search attractions"
+            label="Search attractions, country or city"
             variant="solo"
             single line
             v-model="searchedTerm"

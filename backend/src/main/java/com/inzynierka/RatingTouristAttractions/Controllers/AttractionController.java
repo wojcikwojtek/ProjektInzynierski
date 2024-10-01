@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 @RestController
@@ -45,16 +47,25 @@ public class AttractionController {
     List<Attraction> searchAttractionLike(@PathVariable String name) {
         if(name.length() < 3) return new ArrayList<>();
         List<Attraction> attractions = attractionRepository.findAll();
-        List<Attraction> foundAttractions = new ArrayList<>();
+        Map<Attraction, Integer> foundAttractions = new HashMap<>();
         LevenshteinDistance distance = new LevenshteinDistance();
         for (Attraction attraction : attractions) {
-            if(attraction.getName().contains(name) || distance.apply(name, attraction.getName()) <= 3
-                    || attraction.getCountry().contains(name) || distance.apply(name, attraction.getCountry()) <= 3
-                    || attraction.getCity().contains(name) || distance.apply(name, attraction.getCity()) <= 3) {
-                foundAttractions.add(attraction);
+            int minDistance = Math.min(
+                    Math.min(distance.apply(name, attraction.getName()), distance.apply(name, attraction.getCountry())),
+                    distance.apply(name, attraction.getCity())
+            );
+            if(minDistance <= 3 ||
+                    attraction.getName().contains(name) || name.contains(attraction.getName()) ||
+                    attraction.getCountry().contains(name) || name.contains(attraction.getCountry()) ||
+                    attraction.getCity().contains(name) || name.contains(attraction.getCity())) {
+                foundAttractions.put(attraction, minDistance);
             }
         }
-        return foundAttractions;
+        return foundAttractions.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/add")

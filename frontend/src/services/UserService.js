@@ -28,6 +28,9 @@ export default {
     getFollowedUsersRecentReviews(id) {
         return Api().get('users/' + id + '/recentreviews')
     },
+    getProfilePicture(id) {
+        return Api().get('users/' + id + '/profilepic')
+    },
     followUser(data) {
         return Api().post('users/follow', data)
     },
