@@ -32,9 +32,6 @@ public class Attraction {
     @Column(name = "description", columnDefinition="TEXT")
     private String description;
 
-    @Column(name = "image_url")
-    private String imageUrl;
-
     @JsonIgnore
     @OneToMany(mappedBy = "attraction")
     private List<Review> reviews;
@@ -45,12 +42,11 @@ public class Attraction {
 
     public Attraction() {}
 
-    public Attraction(String name, String country, String city, String location, String description, String imageUrl) {
+    public Attraction(String name, String country, String city, String location, String description) {
         this.name = name;
         this.country = country;
         this.city = city;
         this.location = location;
         this.description = description;
-        this.imageUrl = imageUrl;
     }
 }

@@ -1,7 +1,10 @@
 <template>
     <v-row no-gutters>
         <v-col cols="3" align-self="start" class = "pl-2 pr-2 pt-2 pb-2">
-            <v-img v-if="attraction" :src="attraction.imageUrl"></v-img>
+            <v-img 
+                v-if="attraction" 
+                :src="attractionImage"
+                aspect-ratio="16/9"></v-img>
             <p v-else>Loading image...</p>
         </v-col>
         <v-col v-if="attraction" cols="6" class="pl-2 pr-2 pt-2 pb-2">
@@ -58,6 +61,9 @@ export default {
         const attractionId = this.$route.params.attractionId
         this.attraction = (await AttractionService.getAttractionById(attractionId)).data
         this.reviews = (await AttractionService.getAttractionReviews(attractionId)).data
+    },
+    computed: {
+        attractionImage() { return `http://localhost:8080/rating-attractions/attractions/${this.$route.params.attractionId}/image` }
     },
     methods: {
         async reloadReviews() {

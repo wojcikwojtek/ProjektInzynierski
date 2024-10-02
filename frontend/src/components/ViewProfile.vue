@@ -1,7 +1,6 @@
 <template>
     <v-row no-gutters>
         <v-col cols="2" class = "pl-2 pr-2 pt-2 pb-2">
-            <!--Miejsce na zdjecie profilowe-->
         </v-col>
         <v-col v-if="stats" cols="8" class = "pl-2 pr-2 pt-2 pb-2">
             <div class="white elevation-5 pa-6">
@@ -22,7 +21,7 @@
                 <v-row no-gutters>
                     <v-col v-for="review in stats.recentlyReviewed" :key="review.review.review_id" cols="3" class="pa-1">
                         <v-img 
-                            :src="review.imageUrl" 
+                            :src="getAttractionImgUrl(review.attractionId)" 
                             class="hover-image"
                             @click="navigateTo({
                                 name: 'reviewComments',
@@ -63,6 +62,7 @@
 <script>
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/userStore';
+import axios from 'axios';
 export default {
     data () {
         return {
@@ -94,7 +94,9 @@ export default {
             ];
         },
         followMessage() { return this.isUserFollowing ? 'Following' : 'Follow' },
-        profilePic() { return `http://localhost:8080/rating-attractions/users/${this.$route.params.userId}/profilepic` }
+        profilePic() {  
+            return `http://localhost:8080/rating-attractions/users/${this.$route.params.userId}/profilepic` 
+        }
     },
     async mounted() {
         if(this.userStore.isUserLoggedIn) {
@@ -162,6 +164,9 @@ export default {
                 })
             }
             this.isUserFollowing = !this.isUserFollowing
+        },
+        getAttractionImgUrl(id) {
+            return `http://localhost:8080/rating-attractions/attractions/${id}/image`
         }
     }
 }

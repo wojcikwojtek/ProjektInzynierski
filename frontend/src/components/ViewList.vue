@@ -14,7 +14,9 @@
                                 userId: listInfo.user.user_id
                             }
                         })">
-                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                        <v-avatar size="20">
+                            <v-img :src=getProfilePicUrl(listInfo.user.user_id)></v-img>
+                        </v-avatar>
                         <span class="pa-1">{{ listInfo.user.login }}</span>
                     </div>
                 </template>
@@ -114,7 +116,7 @@
                                     rounded="0"
                                     size="125"
                                 >
-                                    <v-img :src="element.attraction.imageUrl"></v-img>
+                                    <v-img :src="getAttractionImgUrl(element.attraction.attraction_id)"></v-img>
                                 </v-avatar>
                             </div>
                         </v-card>
@@ -175,7 +177,7 @@ export default {
     },
     methods: {
         navigateTo(route) {
-            if(enabled) return
+            if(this.enabled) return
             this.$router.push(route)
         },
         findRating(attractionId, reviews) {
@@ -247,6 +249,12 @@ export default {
             }))
             this.enabled = false
             this.ready = true
+        },
+        getProfilePicUrl(id) {
+            return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
+        },
+        getAttractionImgUrl(id) {
+            return `http://localhost:8080/rating-attractions/attractions/${id}/image`
         }
     }
 }

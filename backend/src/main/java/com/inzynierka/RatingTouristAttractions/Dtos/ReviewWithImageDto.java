@@ -10,12 +10,10 @@ public class ReviewWithImageDto {
     private ReviewDto review;
     private long attractionId;
     private String attractionName;
-    private String imageUrl;
 
-    public ReviewWithImageDto(ReviewDto review, long attractionId, String attractionName, String imageUrl) {
+    public ReviewWithImageDto(ReviewDto review, long attractionId, String attractionName) {
         this.review = review;
         this.attractionId = attractionId;
         this.attractionName = attractionName;
-        this.imageUrl = imageUrl;
     }
 }

@@ -25,7 +25,9 @@
                                             userId: list.user.user_id
                                         }
                                     })">
-                                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                                        <v-avatar size="20">
+                                            <v-img :src=getProfilePicUrl(list.user.user_id)></v-img>
+                                        </v-avatar>
                                         <span class="pa-1">{{ list.user.login }}</span>
                                 </div>
                             </v-card-subtitle>
@@ -43,8 +45,8 @@
                                         class="pl-2 pt-2"
                                         size="60"
                                     >
-                                        <v-img v-if="n-1 >= list.imagesUrls.length" :src="placeholderImageUrl"></v-img>
-                                        <v-img v-else :src="list.imagesUrls[n-1]"></v-img>
+                                        <v-img v-if="n-1 >= list.imagesUrls.length" :src="getAttractionImgUrl(0)"></v-img>
+                                        <v-img v-else :src="getAttractionImgUrl(list.imagesUrls[n-1])"></v-img>
                                     </v-avatar>
                                 </v-col>
                             </v-row>
@@ -62,8 +64,7 @@ import UserService from '@/services/UserService';
 export default {
     data () {
         return {
-            listInfo: null,
-            placeholderImageUrl: "https://t3.ftcdn.net/jpg/02/68/55/60/360_F_268556012_c1WBaKFN5rjRxR2eyV33znK4qnYeKZjm.jpg"
+            listInfo: null
         }
     },
     async mounted() {
@@ -72,6 +73,12 @@ export default {
     methods: {
         navigateTo(route) {
             this.$router.push(route)
+        },
+        getProfilePicUrl(id) {
+            return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
+        },
+        getAttractionImgUrl(id) {
+            return `http://localhost:8080/rating-attractions/attractions/${id}/image`
         }
     }
 }

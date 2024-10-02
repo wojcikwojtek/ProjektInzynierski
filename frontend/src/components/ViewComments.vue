@@ -49,7 +49,9 @@
                     :subtitle="comment.publicationDate"
                 >
                     <template v-slot:prepend>
-                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                        <v-avatar size="40">
+                            <v-img :src=getProfilePicUrl(comment.user.user_id)></v-img>
+                        </v-avatar>
                     </template>
                     <template v-slot:title>
                         <span class="link" @click="navigateTo({
@@ -101,7 +103,6 @@ export default {
     //TODO: zrobic try catche i errory
         this.review = (await ReviewService.getReview(this.reviewId)).data
         this.comments = (await ReviewService.getComments(this.reviewId)).data
-        this.imageUrl = (await AttractionService.getAttractionImage(this.route.params.attractionId)).data
     },
     methods: {
         async reloadComments() {
@@ -121,6 +122,9 @@ export default {
         },
         navigateTo(route) {
             this.$router.push(route)
+        },
+        getProfilePicUrl(id) {
+            return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
         }
     }
 }

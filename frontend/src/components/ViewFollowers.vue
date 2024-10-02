@@ -9,7 +9,9 @@
                     :key="element.user.user_id"
                 >
                     <template v-slot:prepend>
-                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                        <v-avatar size="30">
+                            <v-img :src=getProfilePicUrl(element.user.user_id)></v-img>
+                        </v-avatar>
                     </template>
                     <template v-slot:title>
                         <span class="link" @click="navigateTo({
@@ -69,6 +71,9 @@ export default {
                 })
             }
             element.following = !element.following
+        },
+        getProfilePicUrl(id) {
+            return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
         }
     }
 }

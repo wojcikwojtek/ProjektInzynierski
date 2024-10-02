@@ -5,10 +5,17 @@ import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
 import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.AttractionRequest;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,6 +75,22 @@ public class AttractionController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}/image")
+    ResponseEntity<?> getAttractionImage(@PathVariable long id) {
+        try {
+            Path path = Paths.get("src/main/resources/images/attraction/Attraction" + id + ".jpg");
+            if(!Files.exists(path)) {
+                path = Paths.get("src/main/resources/images/attraction/ImageNotFound.jpg");
+            }
+            Resource resource = new UrlResource(path.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(resource);
+        } catch (MalformedURLException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Image url is invalid");
+        }
+    }
+
     @PostMapping("/add")
     Attraction addAttraction(@RequestBody AttractionRequest attractionRequest) {
         Attraction attraction = new Attraction(
@@ -75,8 +98,7 @@ public class AttractionController {
                 attractionRequest.getCountry(),
                 attractionRequest.getCity(),
                 attractionRequest.getLocation(),
-                attractionRequest.getDescription(),
-                attractionRequest.getImageUrl()
+                attractionRequest.getDescription()
         );
         attractionRepository.save(attraction);
         return attraction;

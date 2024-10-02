@@ -41,6 +41,14 @@ async function load({done}) {
 function navigateTo(route) {
     router.push(route)
 }
+
+function getProfilePicUrl(id) {
+    return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
+}
+
+function getAttractionImgUrl(id) {
+    return `http://localhost:8080/rating-attractions/attractions/${id}/image`
+}
 </script>
 
 <template>
@@ -71,7 +79,9 @@ function navigateTo(route) {
                                             userId: item.user.user_id
                                         }
                                     })">
-                                        <v-icon color="primary" icon="mdi-account"></v-icon>
+                                        <v-avatar size="20">
+                                            <v-img :src=getProfilePicUrl(item.user.user_id)></v-img>
+                                        </v-avatar>
                                         <span class="pa-1">{{ item.user.login }}</span>
                                 </div>
                             </v-card-subtitle>
@@ -89,8 +99,8 @@ function navigateTo(route) {
                                         class="pl-2 pt-2"
                                         size="60"
                                     >
-                                        <v-img v-if="n-1 >= item.imagesUrls.length" :src="placeholderImageUrl"></v-img>
-                                        <v-img v-else :src="item.imagesUrls[n-1]"></v-img>
+                                        <v-img v-if="n-1 >= item.imagesUrls.length" :src="getAttractionImgUrl(0)"></v-img>
+                                        <v-img v-else :src="getAttractionImgUrl(item.imagesUrls[n-1])"></v-img>
                                     </v-avatar>
                                 </v-col>
                             </v-row>

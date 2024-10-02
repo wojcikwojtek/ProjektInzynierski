@@ -33,7 +33,7 @@
                             rounded="0"
                             size="125"
                         >
-                            <v-img :src="attraction.imageUrl"></v-img>
+                            <v-img :src="getAttractionImgUrl(attraction.attraction_id)"></v-img>
                         </v-avatar>
                     </div>
                 </v-card>
@@ -61,6 +61,9 @@ export default {
         },
         navigateTo(route) {
             this.$router.push(route)
+        },
+        getAttractionImgUrl(id) {
+            return `http://localhost:8080/rating-attractions/attractions/${id}/image`
         }
     }
 }

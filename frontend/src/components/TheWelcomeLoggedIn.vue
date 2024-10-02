@@ -15,7 +15,7 @@
                 >
                 <div class="pr-2">
                     <v-img 
-                        :src="element.imageUrl"
+                        :src="getAttractionImgUrl(element.attractionId)"
                         :width="220"
                         aspect-ratio="16/9"
                         class="hover-image"
@@ -63,6 +63,9 @@ export default {
     methods: {
         navigateTo(route) {
             this.$router.push(route)
+        },
+        getAttractionImgUrl(id) {
+            return `http://localhost:8080/rating-attractions/attractions/${id}/image`
         }
     }
 }

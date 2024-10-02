@@ -19,9 +19,9 @@ public class AttractionListWithImagesDto {
     private String publicationDate;
     private int size;
     private User user;
-    private List<String> imagesUrls;
+    private List<Long> imagesUrls;
 
-    public AttractionListWithImagesDto(AttractionList attractionList, List<String> imagesUrls) {
+    public AttractionListWithImagesDto(AttractionList attractionList, List<Long> imagesUrls) {
         this.list_id = attractionList.getList_id();
         this.name = attractionList.getName();
         this.description = attractionList.getDescription();

@@ -44,10 +44,10 @@ public class AttractionListController {
                 .stream()
                 .sorted((o1, o2) -> Integer.compare(o1.getPosition(), o2.getPosition()))
                 .collect(Collectors.toList());
-        List<String> topFourImages = new ArrayList<>();
+        List<Long> topFourImages = new ArrayList<>();
         for(int i = 0; i < 4; i++) {
             if(i >= attractions.size()) break;
-            topFourImages.add(attractions.get(i).getAttraction().getImageUrl());
+            topFourImages.add(attractions.get(i).getAttraction().getAttraction_id());
         }
         return new AttractionListWithImagesDto(attractionList, topFourImages);
     }

@@ -13,6 +13,7 @@ const rating = defineModel('rating')
 const contents = defineModel('contents')
 
 const userStore = useUserStore()
+const profilePic = ref(`http://localhost:8080/rating-attractions/users/${id.value}/profilepic`)
 const didUserLikeReview = ref(false)
 const likeCount = ref(0)
 const commentCount = ref(0)
@@ -68,7 +69,9 @@ async function findUser(login) {
         variant="outlined"
     >
         <template v-slot:prepend>
-            <v-icon color="primary" icon="mdi-account"></v-icon>
+            <v-avatar size="40">
+                <v-img :src="profilePic"></v-img>
+            </v-avatar>
         </template>
         <template v-slot:title>
             <span @click="findUser(user)" class="link">{{ user }}</span>
@@ -86,7 +89,8 @@ async function findUser(login) {
                 color="cyan"
             ></v-rating>
         </template>
-        <v-card-text>{{ contents }}</v-card-text>
+        <v-card-text>{{ contents }}
+        </v-card-text>
         <v-card-actions v-if="userStore.isUserLoggedIn">
             <v-btn
                 size="small"

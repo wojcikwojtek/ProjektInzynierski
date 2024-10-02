@@ -20,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
@@ -61,8 +64,7 @@ public class UserController {
             reviewsDto.add(new ReviewWithImageDto(
                     new ReviewDto(review),
                     review.getAttraction().getAttraction_id(),
-                    review.getAttraction().getName(),
-                    review.getAttraction().getImageUrl()
+                    review.getAttraction().getName()
             ));
         }
         return ResponseEntity.status(HttpStatus.OK).body(reviewsDto);
@@ -78,10 +80,10 @@ public class UserController {
                     .stream()
                     .sorted((o1, o2) -> Integer.compare(o1.getPosition(), o2.getPosition()))
                     .collect(Collectors.toList());
-            List<String> topFourImages = new ArrayList<>();
+            List<Long> topFourImages = new ArrayList<>();
             for(int i = 0; i < 4; i++) {
                 if(i >= attractions.size()) break;
-                topFourImages.add(attractions.get(i).getAttraction().getImageUrl());
+                topFourImages.add(attractions.get(i).getAttraction().getAttraction_id());
             }
             listsWithImages.add(new AttractionListWithImagesDto(list, topFourImages));
         }
@@ -99,8 +101,7 @@ public class UserController {
             recentlyReviewed.add(new ReviewWithImageDto(
                     new ReviewDto(user.getReviews().get(index)),
                     user.getReviews().get(index).getAttraction().getAttraction_id(),
-                    user.getReviews().get(index).getAttraction().getName(),
-                    user.getReviews().get(index).getAttraction().getImageUrl()
+                    user.getReviews().get(index).getAttraction().getName()
             ));
             index--;
         }
@@ -163,21 +164,26 @@ public class UserController {
             recentlyReviewed.add(new ReviewWithImageDto(
                     new ReviewDto(recentReview),
                     recentReview.getAttraction().getAttraction_id(),
-                    recentReview.getAttraction().getName(),
-                    recentReview.getAttraction().getImageUrl()
+                    recentReview.getAttraction().getName()
             ));
         }
         return ResponseEntity.status(HttpStatus.OK).body(recentlyReviewed);
     }
 
     @GetMapping("/{id}/profilepic")
-    ResponseEntity<Resource> getUserProfilePic(@PathVariable long id) throws Exception {
-        //TODO: zrobic ze jesli nie ma takiego zdjecia to zwrocic jakies puste
-        Path path = Paths.get("src/main/resources/images/user/ProfilePic" + id + ".jpg");
-        Resource resource = new UrlResource(path.toUri());
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(resource);
+    ResponseEntity<?> getUserProfilePic(@PathVariable long id) {
+        try {
+            Path path = Paths.get("src/main/resources/images/user/ProfilePic" + id + ".jpg");
+            if(!Files.exists(path)) {
+                path = Paths.get("src/main/resources/images/user/PictureNotFound.jpg");
+            }
+            Resource resource = new UrlResource(path.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(resource);
+        } catch (MalformedURLException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Image url is invalid");
+        }
     }
 
     @PostMapping("/register")
