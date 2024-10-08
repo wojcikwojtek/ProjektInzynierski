@@ -1,6 +1,11 @@
 <template>
     <v-row no-gutters>
         <v-col cols="2" class = "pl-2 pr-2 pt-2 pb-2">
+            <div>
+                <h3>Upload file</h3>
+                <input type="file" @change="onFileChange" />
+                <button @click="uploadFile">Upload</button>
+            </div>
         </v-col>
         <v-col v-if="stats" cols="8" class = "pl-2 pr-2 pt-2 pb-2">
             <div class="white elevation-5 pa-6">
@@ -62,13 +67,14 @@
 <script>
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/userStore';
-import axios from 'axios';
+import FileService from '@/services/FileService';
 export default {
     data () {
         return {
             user: null,
             stats: null,
-            isUserFollowing: false
+            isUserFollowing: false,
+            selectedFile: null
         }
     },
     computed: {
@@ -99,11 +105,11 @@ export default {
         }
     },
     async mounted() {
+        this.user = (await UserService.getUser(this.$route.params.userId)).data
+        this.stats = (await UserService.getStats(this.$route.params.userId)).data
         if(this.userStore.isUserLoggedIn) {
             this.isUserFollowing = (await UserService.isUserFollowing(this.userStore.user.user_id, this.$route.params.userId)).data
         }
-        this.user = (await UserService.getUser(this.$route.params.userId)).data
-        this.stats = (await UserService.getStats(this.$route.params.userId)).data
     },
     async beforeRouteUpdate(to, from) {
         if(to.params.userId !== from.params.userId) {
@@ -167,6 +173,18 @@ export default {
         },
         getAttractionImgUrl(id) {
             return `http://localhost:8080/rating-attractions/attractions/${id}/image`
+        },
+        onFileChange(event) {
+            this.selectedFile = event.target.files[0]
+        },
+        async uploadFile() {
+            if(!this.selectedFile) {
+                return
+            }
+            const formData = new FormData()
+            formData.append('file', this.selectedFile)
+            formData.append('fileDescription', 'User')
+            FileService.uploadFile(formData)
         }
     }
 }
