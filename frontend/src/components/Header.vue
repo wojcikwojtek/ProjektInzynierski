@@ -51,7 +51,8 @@ import { useUserStore } from '@/stores/userStore'
 export default {
     data: () => ({
         items: [
-            { title: 'Profile' }
+            { title: 'Profile' },
+            { title: 'Settings' }
         ]
     }),
     computed: {
@@ -76,6 +77,14 @@ export default {
                         params: {
                             userId: this.userStore.user.user_id
                             }
+                    })
+                    break
+                case 1:
+                    this.navigateTo({
+                        name: 'profileSettings',
+                        params: {
+                            userId: this.userStore.user.user_id
+                        }
                     })
                     break
             }

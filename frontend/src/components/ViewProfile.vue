@@ -1,11 +1,6 @@
 <template>
     <v-row no-gutters>
         <v-col cols="2" class = "pl-2 pr-2 pt-2 pb-2">
-            <div>
-                <h3>Upload file</h3>
-                <input type="file" @change="onFileChange" />
-                <button @click="uploadFile">Upload</button>
-            </div>
         </v-col>
         <v-col v-if="stats" cols="8" class = "pl-2 pr-2 pt-2 pb-2">
             <div class="white elevation-5 pa-6">
@@ -73,8 +68,7 @@ export default {
         return {
             user: null,
             stats: null,
-            isUserFollowing: false,
-            selectedFile: null
+            isUserFollowing: false
         }
     },
     computed: {
@@ -173,18 +167,6 @@ export default {
         },
         getAttractionImgUrl(id) {
             return `http://localhost:8080/rating-attractions/attractions/${id}/image`
-        },
-        onFileChange(event) {
-            this.selectedFile = event.target.files[0]
-        },
-        async uploadFile() {
-            if(!this.selectedFile) {
-                return
-            }
-            const formData = new FormData()
-            formData.append('file', this.selectedFile)
-            formData.append('fileDescription', 'User')
-            FileService.uploadFile(formData)
         }
     }
 }

@@ -12,6 +12,7 @@ import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.FollowUserRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
+import com.inzynierka.RatingTouristAttractions.Requests.UserUpdateRequest;
 import com.inzynierka.RatingTouristAttractions.Responses.UserStatsResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -218,6 +219,23 @@ public class UserController {
         User followedUser = userRepository.findById(followUserRequest.getFollowedUserId()).orElse(null);
         if(followedUser == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Followed user not found");
         user.getFollowedUsers().add(followedUser);
+        userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @PutMapping("/update")
+    ResponseEntity<?> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
+        User user = userRepository.findById(userUpdateRequest.getUserId()).orElse(null);
+        if(user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        if(userRepository.findByLogin(userUpdateRequest.getLogin()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+        }
+        if(userRepository.findByEmail(userUpdateRequest.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already in use");
+        }
+        if(!userUpdateRequest.getLogin().isEmpty()) user.setLogin(userUpdateRequest.getLogin());
+        if(!userUpdateRequest.getPassword().isEmpty()) user.setPassword(userUpdateRequest.getPassword());
+        if(!userUpdateRequest.getEmail().isEmpty()) user.setEmail(userUpdateRequest.getEmail());
         userRepository.save(user);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }

@@ -34,6 +34,9 @@ export default {
     followUser(data) {
         return Api().post('users/follow', data)
     },
+    updateUser(data) {
+        return Api().put('users/update', data)
+    },
     unfollowUser(id, followedUserId) {
         return Api().delete('users/' + id + '/unfollow/' + followedUserId)
     }

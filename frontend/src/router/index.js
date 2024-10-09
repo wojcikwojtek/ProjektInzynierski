@@ -11,6 +11,7 @@ import UserLists from '@/components/UserLists.vue'
 import UserReviews from '@/components/UserReviews.vue'
 import ViewFollowers from '@/components/ViewFollowers.vue'
 import Lists from '@/components/Lists.vue'
+import ProfileSettings from '@/components/ProfileSettings.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,6 +50,11 @@ const router = createRouter({
       path: '/users/:userId',
       name: 'profile',
       component: ViewProfile
+    },
+    {
+      path: '/users/:userId/settings',
+      name: 'profileSettings',
+      component: ProfileSettings
     },
     {
       path: '/users/:userId/lists',
