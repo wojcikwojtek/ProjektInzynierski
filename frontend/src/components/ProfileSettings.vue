@@ -97,6 +97,10 @@ export default {
                 this.snackbar = true
                 this.usedLogin = false
                 this.usedEmail = false
+                this.newLogin = ''
+                this.newEmail = ''
+                this.newPassword = ''
+                this.repeatPassword = ''
                 if(!this.selectedFile) {
                     return
                 }
@@ -105,7 +109,9 @@ export default {
                 formData.append('fileDescription', 'User')
                 formData.append('id', this.$route.params.userId)
                 FileService.uploadFile(formData)
+                this.selectedFile = null
             } catch(error) {
+                this.snackbar = false
                 if(error.response.data == 'Username already exists') {
                     this.usedLogin = true
                 } else if(error.response.data == 'Email already in use') {
@@ -113,11 +119,6 @@ export default {
                 }
                 return
             }
-            this.newLogin = ''
-            this.newEmail = ''
-            this.newPassword = ''
-            this.repeatPassword = ''
-            this.selectedFile = null
         }
     }
 }

@@ -11,6 +11,7 @@ import com.inzynierka.RatingTouristAttractions.Requests.AddToListRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.AttractionRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.EditListRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.ListRequest;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -131,6 +130,25 @@ public class AttractionListController {
             listWithImages.add(getListWithImages(friendsLists.get(i)));
         }
         return listWithImages;
+    }
+
+    @GetMapping("/search/{name}")
+    List<AttractionListWithImagesDto> searchListsLike(@PathVariable String name) {
+        if(name.length() < 3) return new ArrayList<>();
+        List<AttractionList> lists = attractionListRepository.findAll();
+        Map<AttractionListWithImagesDto, Integer> foundLists = new HashMap<>();
+        LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+        for(AttractionList attractionList : lists) {
+            int minDistance = levenshteinDistance.apply(name, attractionList.getName());
+            if(minDistance <= 3 || attractionList.getName().contains(name) || name.contains(attractionList.getName())) {
+                foundLists.put(getListWithImages(attractionList), minDistance);
+            }
+        }
+        return foundLists.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/create")

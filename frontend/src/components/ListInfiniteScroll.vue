@@ -1,13 +1,11 @@
 <script setup>
 import ListService from '@/services/ListService';
 import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/userStore';
+import ListComponent from './ListComponent.vue';
 
 const tab = defineModel('tab')
 const items = ref([])
-const placeholderImageUrl = ref("https://t3.ftcdn.net/jpg/02/68/55/60/360_F_268556012_c1WBaKFN5rjRxR2eyV33znK4qnYeKZjm.jpg")
-const router = useRouter()
 const userStore = useUserStore()
 
 onMounted(async () => {
@@ -37,18 +35,6 @@ async function load({done}) {
 
     done('ok')
 }
-
-function navigateTo(route) {
-    router.push(route)
-}
-
-function getProfilePicUrl(id) {
-    return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
-}
-
-function getAttractionImgUrl(id) {
-    return `http://localhost:8080/rating-attractions/attractions/${id}/image`
-}
 </script>
 
 <template>
@@ -58,55 +44,13 @@ function getAttractionImgUrl(id) {
     >
         <template v-for="(item, index) in items" :key="item">
             <div class="pr-4 pl-4 pb-2">
-                <v-card
-                    variant="outlined"
-                    hover
-                    @click="navigateTo({
-                        name: 'list',
-                        params: {
-                            listId: item.list_id
-                        }
-                    })"
-                >
-                    <div class="d-flex flex-no-wrap justify-space-between">
-                        <div>
-                            <v-card-title>{{ item.name }}</v-card-title>
-                            <v-card-subtitle>
-                                <div class="link" 
-                                    @click.stop="navigateTo({
-                                        name: 'profile',
-                                        params: {
-                                            userId: item.user.user_id
-                                        }
-                                    })">
-                                        <v-avatar size="20">
-                                            <v-img :src=getProfilePicUrl(item.user.user_id)></v-img>
-                                        </v-avatar>
-                                        <span class="pa-1">{{ item.user.login }}</span>
-                                </div>
-                            </v-card-subtitle>
-                            <v-card-text>{{ item.description }}</v-card-text>
-                        </div>
-                        <div style="width: 130px;" class="pr-4 pb-2">
-                            <v-row align="center" no-gutters>
-                                <v-col
-                                    v-for="n in 4"
-                                    :key="n"
-                                    cols="6"
-                                >   
-                                    <v-avatar
-                                        rounded="0"
-                                        class="pl-2 pt-2"
-                                        size="60"
-                                    >
-                                        <v-img v-if="n-1 >= item.imagesUrls.length" :src="getAttractionImgUrl(0)"></v-img>
-                                        <v-img v-else :src="getAttractionImgUrl(item.imagesUrls[n-1])"></v-img>
-                                    </v-avatar>
-                                </v-col>
-                            </v-row>
-                        </div>
-                    </div>
-                </v-card>
+                <list-component
+                    v-model:listId="item.list_id"
+                    v-model:name="item.name"
+                    v-model:description="item.description"
+                    v-model:user="item.user"
+                    v-model:imagesUrls="item.imagesUrls"    
+                ></list-component>
             </div>
         </template>
         <template v-slot:empty>

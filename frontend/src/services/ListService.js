@@ -22,6 +22,9 @@ export default {
     getTenFriendsLists(index, userId) {
         return Api().get('lists/' + index + '/friendslists/' + userId)
     },
+    search(name) {
+        return Api().get('lists/search/' + name)
+    },
     addToList(data) {
         return Api().post('lists/add', data)
     },
