@@ -21,10 +21,10 @@
         >
         </v-text-field>
     </div>
-    <div v-for="result in this.results" class="d-flex mx-auto w-50 pt-2">
+    <div v-for="result in results" class="d-flex mx-auto w-50 pt-2">
         <v-row justify="center" dense>
             <v-col cols="12">
-                <v-card variant="outlined" max-height="150" link v-if="value==items[0]"
+                <v-card variant="outlined" max-height="150" hover v-if="value==items[0]"
                     @click="navigateTo({
                         name: 'attraction', 
                         params: {
@@ -53,6 +53,27 @@
                     v-model:user="result.user"
                     v-model:imagesUrls="result.imagesUrls"
                 ></ListComponent>
+                <v-card v-if="value==items[2]" variant="outlined" hover 
+                @click="navigateTo({
+                    name: 'profile',
+                    params: {
+                        userId: result.user.user_id
+                    }
+                })">
+                    <template v-slot:prepend>
+                        <v-avatar size="40">
+                            <v-img :src=getProfilePicUrl(result.user.user_id)></v-img>
+                        </v-avatar>
+                    </template>
+                    <template v-slot:title>{{ result.user.login }}</template>
+                    <template v-slot:append v-if="userStore.isUserLoggedIn">
+                        <v-icon 
+                            :color="result.following ? 'cyan' : 'grey'" 
+                            :icon="result.following ? 'mdi-check-circle' : 'mdi-plus-circle'"
+                            @click.stop="follow(result)"
+                        ></v-icon>
+                    </template>
+                </v-card>
             </v-col>
         </v-row>
     </div>
@@ -62,6 +83,8 @@
 import AttractionService from '@/services/AttractionService';
 import ListService from '@/services/ListService';
 import ListComponent from './ListComponent.vue';
+import UserService from '@/services/UserService';
+import { useUserStore } from '@/stores/userStore';
 
 export default {
     data () {
@@ -73,6 +96,7 @@ export default {
         }
     },
     computed: {
+        userStore: () => useUserStore(),
         searchLabel() {
             if(this.value == this.items[0]) return 'Search attractions, country or city'
             else if(this.value == this.items[1]) return 'Search lists'
@@ -94,6 +118,8 @@ export default {
                 this.searchAttractions()
             } else if(this.value == this.items[1]) {
                 this.searchLists()
+            } else if(this.value == this.items[2]) {
+                this.searchUsers()
             }
         },
         async searchAttractions() {
@@ -105,11 +131,30 @@ export default {
             if(this.searchedTerm == '') return
             this.results = (await ListService.search(this.searchedTerm)).data
         },
+        async searchUsers() {
+            if(this.searchedTerm == '') return
+            const id = this.userStore.isUserLoggedIn ? this.userStore.user.user_id : 0
+            this.results = (await UserService.search(id, this.searchedTerm)).data
+        },
         navigateTo(route) {
             this.$router.push(route)
         },
+        getProfilePicUrl(id) {
+            return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
+        },
         getAttractionImgUrl(id) {
             return `http://localhost:8080/rating-attractions/attractions/${id}/image`
+        },
+        async follow(element) {
+            if(element.following) {
+                const response = await UserService.unfollowUser(this.userStore.user.user_id, element.user.user_id)
+            } else {
+                const response = await UserService.followUser({
+                    userId: this.userStore.user.user_id,
+                    followedUserId: element.user.user_id
+                })
+            }
+            element.following = !element.following
         }
     }
 }

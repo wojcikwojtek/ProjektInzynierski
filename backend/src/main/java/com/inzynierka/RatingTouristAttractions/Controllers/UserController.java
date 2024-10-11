@@ -14,6 +14,7 @@ import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.UserUpdateRequest;
 import com.inzynierka.RatingTouristAttractions.Responses.UserStatsResponse;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -185,6 +184,28 @@ public class UserController {
         } catch (MalformedURLException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Image url is invalid");
         }
+    }
+
+    @GetMapping("{id}/search/{name}")
+    List<UserDto> searchUsersLike(@PathVariable long id, @PathVariable String name) {
+        if(name.length() < 3) return new ArrayList<>();
+        User loggedUser = userRepository.findById(id).orElse(null);
+        List<User> users = userRepository.findAll();
+        Map<UserDto, Integer> foundUsers = new HashMap<>();
+        LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+        for(User user : users) {
+            if(loggedUser != null && loggedUser.getLogin().equals(user.getLogin())) continue;
+            int minDistance = levenshteinDistance.apply(name, user.getLogin());
+            if(minDistance <= 3 || user.getLogin().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(user.getLogin().toLowerCase())) {
+                boolean isFollowing = loggedUser!=null ? loggedUser.getFollowedUsers().contains(user) : false;
+                foundUsers.put(new UserDto(user, isFollowing), minDistance);
+            }
+        }
+        return foundUsers.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/register")

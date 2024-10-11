@@ -31,6 +31,9 @@ export default {
     getProfilePicture(id) {
         return Api().get('users/' + id + '/profilepic')
     },
+    search(id, name) {
+        return Api().get('users/' + id + '/search/' + name)
+    },
     followUser(data) {
         return Api().post('users/follow', data)
     },

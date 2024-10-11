@@ -62,9 +62,9 @@ public class AttractionController {
                     distance.apply(name, attraction.getCity())
             );
             if(minDistance <= 3 ||
-                    attraction.getName().contains(name) || name.contains(attraction.getName()) ||
-                    attraction.getCountry().contains(name) || name.contains(attraction.getCountry()) ||
-                    attraction.getCity().contains(name) || name.contains(attraction.getCity())) {
+                    attraction.getName().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(attraction.getName().toLowerCase()) ||
+                    attraction.getCountry().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(attraction.getCountry().toLowerCase()) ||
+                    attraction.getCity().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(attraction.getCity().toLowerCase())) {
                 foundAttractions.put(attraction, minDistance);
             }
         }

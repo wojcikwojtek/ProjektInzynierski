@@ -140,7 +140,7 @@ public class AttractionListController {
         LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
         for(AttractionList attractionList : lists) {
             int minDistance = levenshteinDistance.apply(name, attractionList.getName());
-            if(minDistance <= 3 || attractionList.getName().contains(name) || name.contains(attractionList.getName())) {
+            if(minDistance <= 3 || attractionList.getName().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(attractionList.getName().toLowerCase())) {
                 foundLists.put(getListWithImages(attractionList), minDistance);
             }
         }
