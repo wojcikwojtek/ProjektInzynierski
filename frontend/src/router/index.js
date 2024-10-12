@@ -12,6 +12,7 @@ import UserReviews from '@/components/UserReviews.vue'
 import ViewFollowers from '@/components/ViewFollowers.vue'
 import Lists from '@/components/Lists.vue'
 import ProfileSettings from '@/components/ProfileSettings.vue'
+import MapView from '@/components/MapView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -85,6 +86,11 @@ const router = createRouter({
       path: '/lists/:listId',
       name: 'list',
       component: ViewList
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: MapView
     },
     {
       path: '/about',

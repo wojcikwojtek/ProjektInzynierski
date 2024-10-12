@@ -54,6 +54,12 @@
                     <v-divider :thickness="3"></v-divider>
                 </div>
             </div>
+            <div class="pt-3">
+                <h3 class="title">Visited countries</h3>
+                <MapView
+                    v-model:visitedCountries="stats.visitedCountries"
+                ></MapView>
+            </div>
             </div>
         </v-col>
     </v-row>
@@ -62,7 +68,7 @@
 <script>
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/userStore';
-import FileService from '@/services/FileService';
+import MapView from './MapView.vue';
 export default {
     data () {
         return {
@@ -70,6 +76,9 @@ export default {
             stats: null,
             isUserFollowing: false
         }
+    },
+    components: {
+        MapView
     },
     computed: {
         userStore: () => useUserStore(),

@@ -3,10 +3,7 @@ package com.inzynierka.RatingTouristAttractions.Controllers;
 import com.inzynierka.RatingTouristAttractions.Dtos.AttractionListWithImagesDto;
 import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
 import com.inzynierka.RatingTouristAttractions.Dtos.UserDto;
-import com.inzynierka.RatingTouristAttractions.Entities.AttractionList;
-import com.inzynierka.RatingTouristAttractions.Entities.AttractionPosition;
-import com.inzynierka.RatingTouristAttractions.Entities.Review;
-import com.inzynierka.RatingTouristAttractions.Entities.User;
+import com.inzynierka.RatingTouristAttractions.Entities.*;
 import com.inzynierka.RatingTouristAttractions.Dtos.ReviewWithImageDto;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.FollowUserRequest;
@@ -95,6 +92,7 @@ public class UserController {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         List<ReviewWithImageDto> recentlyReviewed = new ArrayList<>();
+        List<String> visitedCountriesIds = new ArrayList<>();
         int index = user.getReviews().size() - 1;
         for(int i = 0; i <=4; i++) {
             if(index < 0) break;
@@ -105,12 +103,15 @@ public class UserController {
             ));
             index--;
         }
+        user.getVisitedCountries()
+                .forEach(userCountry -> visitedCountriesIds.add(userCountry.getCountry().getCountry_id()));
         UserStatsResponse userStats = new UserStatsResponse(
                 user.getReviews().size(),
                 user.getLists().size(),
                 user.getFollowedUsers().size(),
                 userRepository.countFollowers(id),
-                recentlyReviewed
+                recentlyReviewed,
+                visitedCountriesIds
         );
         return ResponseEntity.status(HttpStatus.OK).body(userStats);
     }

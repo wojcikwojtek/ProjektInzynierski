@@ -14,12 +14,14 @@ public class UserStatsResponse {
     private int followingCount;
     private int followersCount;
     private List<ReviewWithImageDto> recentlyReviewed;
+    private List<String> visitedCountries;
 
-    public UserStatsResponse(int reviewCount, int listCount, int followingCount, int followersCount, List<ReviewWithImageDto> recentlyReviewed) {
+    public UserStatsResponse(int reviewCount, int listCount, int followingCount, int followersCount, List<ReviewWithImageDto> recentlyReviewed, List<String> visitedCountries) {
         this.reviewCount = reviewCount;
         this.listCount = listCount;
         this.followingCount = followingCount;
         this.followersCount = followersCount;
         this.recentlyReviewed = recentlyReviewed;
+        this.visitedCountries = visitedCountries;
     }
 }

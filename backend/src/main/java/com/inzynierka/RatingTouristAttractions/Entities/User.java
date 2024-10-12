@@ -46,6 +46,10 @@ public class User {
     private List<AttractionList> lists;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<UserCountry> visitedCountries;
+
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "user_following",
