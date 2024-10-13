@@ -1,8 +1,8 @@
 <template>
     <v-row no-gutters>
-        <v-col cols="2" class="pa-2">
+        <v-col cols="3" class="pa-2">
         </v-col>
-        <v-col cols="8" class="pa-2">
+        <v-col cols="6" class="pa-2">
             <div class="white elevation-5 pa-6">
                 <v-snackbar
                     v-model="snackbar"

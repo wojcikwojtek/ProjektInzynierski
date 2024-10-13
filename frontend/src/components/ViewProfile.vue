@@ -203,7 +203,7 @@ export default {
 }
 
 .hover-image:hover {
-  border: 4px solid cyan; 
+  border: 4px solid #00BCD4; 
 }
 
 .link{

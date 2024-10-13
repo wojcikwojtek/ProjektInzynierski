@@ -25,6 +25,9 @@ export default {
     search(name) {
         return Api().get('lists/search/' + name)
     },
+    createList(data) {
+        return Api().post('lists/create', data)
+    },
     addToList(data) {
         return Api().post('lists/add', data)
     },

@@ -12,6 +12,17 @@
                         <v-tab value="two">Newest</v-tab>
                         <v-tab value="three">Friends lists</v-tab>
                     </v-tabs>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn
+                            append-icon="mdi-plus"
+                            @click="navigateTo({
+                                name: 'listCreate'
+                            })"
+                        >
+                            Create new
+                        </v-btn>
+                    </v-toolbar-items>
                 </v-toolbar>
                 <v-tabs-window v-model="tab">
                     <v-tabs-window-item value="one">
@@ -50,6 +61,11 @@ export default {
     },
     computed: {
         userStore: () => useUserStore()
+    },
+    methods: {
+        navigateTo(route) {
+            this.$router.push(route)
+        }
     }
 }
 </script>
