@@ -29,6 +29,9 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "is_admin", nullable = false)
+    private boolean is_admin;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviews;
@@ -64,5 +67,6 @@ public class User {
         this.login = login;
         this.password = password;
         this.email = email;
+        this.is_admin = false;
     }
 }

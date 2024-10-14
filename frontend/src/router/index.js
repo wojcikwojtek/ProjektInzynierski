@@ -14,6 +14,7 @@ import Lists from '@/components/Lists.vue'
 import ProfileSettings from '@/components/ProfileSettings.vue'
 import MapView from '@/components/MapView.vue'
 import ListCreate from '@/components/ListCreate.vue'
+import AddAttraction from '@/components/AddAttraction.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/attractions',
       name: 'attractions',
       component: Attractions
+    },
+    {
+      path: '/attractions/add',
+      name: 'addAttraction',
+      component: AddAttraction
     },
     {
       path: '/attractions/:attractionId',
