@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import AdminService from '@/services/AdminService';
 import CountryService from '@/services/CountryService';
 
 export default {
@@ -74,6 +75,21 @@ export default {
     methods: {
         async submit() {
             if(!this.valid || !this.selectedFile) return
+            try {
+                const formData = new FormData()
+                const suggestionData = JSON.stringify({
+                    name: this.name,
+                    country: this.country,
+                    city: this.city,
+                    location: this.location,
+                    description: this.description
+                });
+                formData.append('suggestion', new Blob([suggestionData], { type: 'application/json' }))
+                formData.append('file', this.selectedFile)
+                AdminService.addSuggestion(formData)
+            } catch(error) {
+                console.log(error)
+            }
         }
     }
 }

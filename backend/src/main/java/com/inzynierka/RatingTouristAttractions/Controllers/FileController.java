@@ -27,18 +27,28 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-                                        @RequestParam String fileDescription,
                                         @RequestParam long id) {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().body("Empty file");
         }
         Path currentRelativePath = Paths.get("");
-        String filePath = currentRelativePath.toAbsolutePath() + "\\src\\main\\resources\\images\\";
-        if(fileDescription.equals("User")) {
-            filePath = filePath + "user\\ProfilePic";
-        } else if(fileDescription.equals("Attraction")) {
-            filePath = filePath + "attraction\\Attraction";
+        String filePath = currentRelativePath.toAbsolutePath() + "\\src\\main\\resources\\images\\user\\ProfilePic";
+        try {
+            String realPath = filePath + id + ".jpg";
+            file.transferTo(new File(realPath));
+            return ResponseEntity.ok().body("File uploaded");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("File upload failed");
         }
+    }
+
+    public ResponseEntity<?> uploadSuggestion(MultipartFile file, long id) {
+        if(file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Empty file");
+        }
+        Path currentRelativePath = Paths.get("");
+        String filePath = currentRelativePath.toAbsolutePath() + "\\src\\main\\resources\\images\\attraction\\Suggestion";
         try {
             String realPath = filePath + id + ".jpg";
             file.transferTo(new File(realPath));

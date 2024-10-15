@@ -106,7 +106,6 @@ export default {
                 }
                 const formData = new FormData()
                 formData.append('file', this.selectedFile)
-                formData.append('fileDescription', 'User')
                 formData.append('id', this.$route.params.userId)
                 FileService.uploadFile(formData)
                 this.selectedFile = null
