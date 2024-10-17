@@ -31,7 +31,7 @@
                 </template>
                 <v-list>
                     <v-list-item
-                        v-for="(item, i) in items" 
+                        v-for="(item, i) in filteredItems" 
                         :key="i"
                         :value="item"
                     >
@@ -52,13 +52,19 @@ export default {
     data: () => ({
         items: [
             { title: 'Profile' },
-            { title: 'Settings' }
+            { title: 'Settings' },
+            { title: 'Admin Panel' }
         ]
     }),
     computed: {
         userStore: () => useUserStore(),
         isUserLoggedIn() {
             return this.userStore.isUserLoggedIn
+        },
+        filteredItems() {
+            return this.items.filter(item => {
+                return item.title != 'Admin Panel' || this.userStore.user.admin
+            })
         }
     },
     methods: {
@@ -85,6 +91,11 @@ export default {
                         params: {
                             userId: this.userStore.user.user_id
                         }
+                    })
+                    break
+                case 2:
+                    this.navigateTo({
+                        name: 'adminPanel'
                     })
                     break
             }

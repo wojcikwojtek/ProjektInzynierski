@@ -15,6 +15,7 @@ import ProfileSettings from '@/components/ProfileSettings.vue'
 import MapView from '@/components/MapView.vue'
 import ListCreate from '@/components/ListCreate.vue'
 import AddAttraction from '@/components/AddAttraction.vue'
+import AdminPanel from '@/components/AdminPanel.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -103,6 +104,11 @@ const router = createRouter({
       path: '/map',
       name: 'map',
       component: MapView
+    },
+    {
+      path: '/admin',
+      name: 'adminPanel',
+      component: AdminPanel
     },
     {
       path: '/about',

@@ -58,4 +58,13 @@ public class FileController {
             return ResponseEntity.badRequest().body("File upload failed");
         }
     }
+
+    public boolean renameAttractionImage(long oldId, long newId) {
+        Path currentRelativePath = Paths.get("");
+        String filePath = currentRelativePath.toAbsolutePath() + "\\src\\main\\resources\\images\\attraction\\Suggestion" + oldId + ".jpg";
+        File oldFile = new File(filePath);
+        filePath = currentRelativePath.toAbsolutePath() + "\\src\\main\\resources\\images\\attraction\\Attraction" + newId + ".jpg";
+        File newFile = new File(filePath);
+        return oldFile.renameTo(newFile);
+    }
 }

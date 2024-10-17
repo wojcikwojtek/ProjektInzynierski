@@ -30,7 +30,7 @@ public class User {
     private String email;
 
     @Column(name = "is_admin", nullable = false)
-    private boolean is_admin;
+    private boolean isAdmin;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
@@ -67,6 +67,6 @@ public class User {
         this.login = login;
         this.password = password;
         this.email = email;
-        this.is_admin = false;
+        this.isAdmin = false;
     }
 }

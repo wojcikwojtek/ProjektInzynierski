@@ -6,5 +6,8 @@ export default {
     },
     addSuggestion(data) {
         return Api().post('/admin/addsuggestion', data)
+    },
+    approveSuggestion(data) {
+        return Api().post(`admin/suggestion/approve?suggestionId=${data}`)
     }
 }
