@@ -67,4 +67,11 @@ public class FileController {
         File newFile = new File(filePath);
         return oldFile.renameTo(newFile);
     }
+
+    public boolean deleteSuggestion(long id) {
+        Path currentRelativePath = Paths.get("");
+        String filePath = currentRelativePath.toAbsolutePath() + "\\src\\main\\resources\\images\\attraction\\Suggestion" + id + ".jpg";
+        File file = new File(filePath);
+        return file.delete();
+    }
 }

@@ -9,5 +9,8 @@ export default {
     },
     approveSuggestion(data) {
         return Api().post(`admin/suggestion/approve?suggestionId=${data}`)
+    },
+    discardSuggestion(data) {
+        return Api().post(`admin/suggestion/discard?suggestionId=${data}`)
     }
 }

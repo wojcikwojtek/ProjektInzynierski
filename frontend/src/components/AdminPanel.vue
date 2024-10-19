@@ -13,7 +13,7 @@
                             <v-card-text>{{ suggestion.description }}</v-card-text>
                             <v-card-actions>
                                 <v-btn icon="mdi-check" color="green" @click="approve(suggestion.suggestion_id)"></v-btn>
-                                <v-btn icon="mdi-close" color="red"></v-btn>
+                                <v-btn icon="mdi-close" color="red" @click="discard(suggestion.suggestion_id)"></v-btn>
                             </v-card-actions>
                         </div>
                         <v-avatar 
@@ -48,6 +48,10 @@ export default {
         },
         async approve(id) {
             const response = await AdminService.approveSuggestion(id)
+            this.suggestions = (await AdminService.getSuggestions()).data
+        },
+        async discard(id) {
+            const response = await AdminService.discardSuggestion(id)
             this.suggestions = (await AdminService.getSuggestions()).data
         }
     }

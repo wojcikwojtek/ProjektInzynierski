@@ -26,8 +26,8 @@ public class UserCountry {
 
     public UserCountry() {}
 
-    public UserCountry(UserCountryKey id, User user, Country country) {
-        this.id = id;
+    public UserCountry(User user, Country country) {
+        this.id = new UserCountryKey(user.getUser_id(), country.getCountry_id());
         this.user = user;
         this.country = country;
     }

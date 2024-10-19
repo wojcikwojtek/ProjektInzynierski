@@ -103,4 +103,17 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not rename attraction image");
         }
     }
+
+    @PostMapping("/suggestion/discard")
+    ResponseEntity<?> discardSuggestion(@RequestParam long suggestionId) {
+        AttractionSuggestion attractionSuggestion = attractionSuggestionRepository.findById(suggestionId).orElse(null);
+        if (attractionSuggestion == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Suggestion not found");
+        FileController fileController = new FileController();
+        if(fileController.deleteSuggestion(attractionSuggestion.getSuggestion_id())) {
+            attractionSuggestionRepository.delete(attractionSuggestion);
+            return ResponseEntity.ok().body("Suggestion discarded");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Could not delete suggestion");
+        }
+    }
 }

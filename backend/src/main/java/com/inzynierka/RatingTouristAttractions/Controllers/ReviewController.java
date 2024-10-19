@@ -1,13 +1,8 @@
 package com.inzynierka.RatingTouristAttractions.Controllers;
 
 import com.inzynierka.RatingTouristAttractions.Dtos.ReviewDto;
-import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
-import com.inzynierka.RatingTouristAttractions.Entities.Comment;
-import com.inzynierka.RatingTouristAttractions.Entities.Review;
-import com.inzynierka.RatingTouristAttractions.Entities.User;
-import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository;
-import com.inzynierka.RatingTouristAttractions.Repositories.ReviewRepository;
-import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
+import com.inzynierka.RatingTouristAttractions.Entities.*;
+import com.inzynierka.RatingTouristAttractions.Repositories.*;
 import com.inzynierka.RatingTouristAttractions.Requests.ReviewRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +23,15 @@ public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final AttractionRepository attractionRepository;
+    private final CountryRepository countryRepository;
+    private final UserCountryRepository userCountryRepository;
 
-    public ReviewController(ReviewRepository reviewRepository, UserRepository userRepository, AttractionRepository attractionRepository) {
+    public ReviewController(ReviewRepository reviewRepository, UserRepository userRepository, AttractionRepository attractionRepository, CountryRepository countryRepository, UserCountryRepository userCountryRepository) {
         this.reviewRepository = reviewRepository;
         this.userRepository = userRepository;
         this.attractionRepository = attractionRepository;
+        this.countryRepository = countryRepository;
+        this.userCountryRepository = userCountryRepository;
     }
 
     @GetMapping
@@ -87,6 +86,15 @@ public class ReviewController {
                 attraction
         );
         reviewRepository.save(review);
+        boolean didUserVisit = false;
+        for(UserCountry userCountry : user.getVisitedCountries()) {
+            if(attraction.getCountry().equals(userCountry.getCountry().getName())) didUserVisit = true;
+        }
+        if(!didUserVisit) {
+            Country country = countryRepository.findByName(attraction.getCountry());
+            UserCountry userCountry = new UserCountry(user, country);
+            userCountryRepository.save(userCountry);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(review);
     }
 
