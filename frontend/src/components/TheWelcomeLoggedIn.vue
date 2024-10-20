@@ -14,11 +14,25 @@
                     :key="element.review.review_id"
                 >
                 <div class="pr-2">
-                    <v-img 
-                        :src="getAttractionImgUrl(element.attractionId)"
-                        :width="220"
-                        aspect-ratio="16/9"
+                    <div class="link" @click="navigateTo({
+                        name: 'profile',
+                        params: {
+                            userId: element.review.user.user_id
+                        }
+                    })">
+                        <v-avatar size="20" class="mr-1 mb-1">
+                            <v-img :src=getProfilePicUrl(element.review.user.user_id)></v-img>
+                        </v-avatar>
+                        <span class="pb-1">{{ element.review.user.login }}</span>
+                    </div>
+                    <v-responsive
                         class="hover-image"
+                        :aspect-ratio="16/9"
+                        style="position: relative; width: 220px; height: 124px;"
+                    >
+                        <v-img 
+                        :src="getAttractionImgUrl(element.attractionId)"
+                        cover
                         @click="navigateTo({
                             name: 'reviewComments',
                             params: {
@@ -26,7 +40,11 @@
                                 reviewId: element.review.review_id
                             }
                         })"
-                    ></v-img>
+                        ></v-img>
+                        <div class="image-footer">
+                            {{ element.attractionName }}
+                        </div>
+                    </v-responsive>
                     <div class="d-flex justify-center">
                         <v-rating
                             v-model="element.review.rating"
@@ -66,6 +84,9 @@ export default {
         },
         getAttractionImgUrl(id) {
             return `http://localhost:8080/rating-attractions/attractions/${id}/image`
+        },
+        getProfilePicUrl(id) {
+            return `http://localhost:8080/rating-attractions/users/${id}/profilepic`
         }
     }
 }
@@ -94,5 +115,30 @@ export default {
 
 .hover-image:hover {
   border: 4px solid #00BCD4; 
+}
+
+.image-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hover-image:hover .image-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.link{
+    cursor: pointer;
+    display: inline-block;
 }
 </style>

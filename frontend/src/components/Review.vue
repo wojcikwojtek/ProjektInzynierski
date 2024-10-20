@@ -13,10 +13,11 @@ const rating = defineModel('rating')
 const contents = defineModel('contents')
 
 const userStore = useUserStore()
-const profilePic = ref(`http://localhost:8080/rating-attractions/users/${id.value}/profilepic`)
 const didUserLikeReview = ref(false)
 const likeCount = ref(0)
 const commentCount = ref(0)
+const userId = ref(0)
+const profilePic = ref(``)
 const router = useRouter()
 const route = useRoute()
 const currentPath = router.currentRoute.value.path + ""
@@ -27,6 +28,8 @@ onMounted(async () => {
     }
     likeCount.value = (await ReviewService.getLikeCount(id.value)).data
     commentCount.value = (await ReviewService.getCommentCount(id.value)).data
+    userId.value = (await UserService.findUser(user.value)).data.user_id
+    profilePic.value = `http://localhost:8080/rating-attractions/users/${userId.value}/profilepic`
 })
 
 async function likeReview() {
@@ -47,20 +50,6 @@ async function likeReview() {
 function navigateTo(route) {
     router.push(route)
 }
-
-async function findUser(login) {
-    if(!userStore.isUserLoggedIn) {
-        navigateTo({name: 'login'})
-        return
-    }
-    const id = (await UserService.findUser(login)).data.user_id
-    navigateTo({
-        name: 'profile',
-        params: {
-            userId: id
-        }
-    })
-}
 </script>
 
 <template>
@@ -74,7 +63,12 @@ async function findUser(login) {
             </v-avatar>
         </template>
         <template v-slot:title>
-            <span @click="findUser(user)" class="link">{{ user }}</span>
+            <span @click="navigateTo({
+                name: 'profile',
+                params: {
+                    userId: userId
+                }
+            })" class="link">{{ user }}</span>
         </template>
         <template v-slot:subtitle>
             {{ publicationDate }}

@@ -134,7 +134,6 @@ public class AttractionListController {
 
     @GetMapping("/search/{name}")
     List<AttractionListWithImagesDto> searchListsLike(@PathVariable String name) {
-        if(name.length() < 3) return new ArrayList<>();
         List<AttractionList> lists = attractionListRepository.findAll();
         Map<AttractionListWithImagesDto, Integer> foundLists = new HashMap<>();
         LevenshteinDistance levenshteinDistance = new LevenshteinDistance();

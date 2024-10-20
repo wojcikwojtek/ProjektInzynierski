@@ -20,17 +20,26 @@
                 <h3 class="title">Recently reviewed</h3>
                 <v-row no-gutters>
                     <v-col v-for="review in stats.recentlyReviewed" :key="review.review.review_id" cols="3" class="pa-1">
-                        <v-img 
-                            :src="getAttractionImgUrl(review.attractionId)" 
+                        <v-responsive
                             class="hover-image"
-                            @click="navigateTo({
-                                name: 'reviewComments',
-                                params: {
-                                    attractionId: review.attractionId,
-                                    reviewId: review.review.review_id
-                                }
-                            })">
-                        </v-img>
+                            :aspect-ratio="16/9"
+                            style="position: relative; height: 124px;"
+                        >
+                            <v-img 
+                                :src="getAttractionImgUrl(review.attractionId)" 
+                                cover
+                                @click="navigateTo({
+                                    name: 'reviewComments',
+                                    params: {
+                                        attractionId: review.attractionId,
+                                        reviewId: review.review.review_id
+                                    }
+                                })">
+                            </v-img>
+                            <div class="image-footer">
+                                {{ review.attractionName }}
+                            </div>
+                        </v-responsive>
                         <div class="d-flex justify-center">
                             <v-rating
                                 v-model="review.review.rating"
@@ -213,5 +222,25 @@ export default {
 
 .link:hover {
     background-color: lightgrey;
+}
+
+.image-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hover-image:hover .image-footer {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

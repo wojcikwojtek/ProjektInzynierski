@@ -21,7 +21,39 @@
         >
         </v-text-field>
     </div>
-    <div v-for="result in results" class="d-flex mx-auto w-50 pt-2">
+    <div class="d-flex mx-auto w-50 pt-2">
+    <v-alert
+        v-if="value==items[0]"
+        v-model="showAlert"
+        close-label="Close Alert"
+        icon="$info"
+        color="cyan"
+        title="Can't find any attractions"
+        text="If you can't find what you're looking for try suggesting a"
+        closable
+    >
+        <v-btn variant="text" class="bg-cyan text-black" density="compact" 
+            @click="navigateTo({
+                name: 'addAttraction'
+            })">new attraction</v-btn>
+    </v-alert>
+    <v-alert
+        v-if="value==items[1]"
+        v-model="showAlert"
+        close-label="Close Alert"
+        icon="$info"
+        color="cyan"
+        title="Can't find any lists"
+        text="If you can't find what you're looking for try creating a"
+        closable
+    >
+        <v-btn variant="text" class="bg-cyan text-black" density="compact" 
+            @click="navigateTo({
+                name: 'listCreate'
+            })">new list</v-btn>
+    </v-alert>
+    </div>
+    <div v-for="result in results" >
         <v-row justify="center" dense>
             <v-col cols="12">
                 <v-card variant="outlined" max-height="150" hover v-if="value==items[0]"
@@ -92,7 +124,8 @@ export default {
             searchedTerm: '',
             results: [],
             items: ['Attractions', 'Lists', 'Users'],
-            value: 'Attractions'
+            value: 'Attractions',
+            showAlert: false
         }
     },
     computed: {
@@ -114,6 +147,7 @@ export default {
     },
     methods: {
         search() {
+            if(this.searchedTerm.length < 3) return
             if(this.value == this.items[0]) {
                 this.searchAttractions()
             } else if(this.value == this.items[1]) {
@@ -124,12 +158,17 @@ export default {
         },
         async searchAttractions() {
             if(this.searchedTerm == '') return
-            const response = await AttractionService.search(this.searchedTerm)
-            this.results = response.data
+            this.results = (await AttractionService.search(this.searchedTerm)).data
+            if(this.results.length == 0) {
+                this.showAlert = true
+            }
         },
         async searchLists() {
             if(this.searchedTerm == '') return
             this.results = (await ListService.search(this.searchedTerm)).data
+            if(this.results.length == 0) {
+                this.showAlert = true
+            }
         },
         async searchUsers() {
             if(this.searchedTerm == '') return

@@ -189,7 +189,6 @@ public class UserController {
 
     @GetMapping("{id}/search/{name}")
     List<UserDto> searchUsersLike(@PathVariable long id, @PathVariable String name) {
-        if(name.length() < 3) return new ArrayList<>();
         User loggedUser = userRepository.findById(id).orElse(null);
         List<User> users = userRepository.findAll();
         Map<UserDto, Integer> foundUsers = new HashMap<>();
