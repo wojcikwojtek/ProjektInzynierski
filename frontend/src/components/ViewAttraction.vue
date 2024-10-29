@@ -4,10 +4,12 @@
             <v-img 
                 v-if="attraction" 
                 :src="attractionImage"
-                aspect-ratio="16/9"></v-img>
+                aspect-ratio="16/9"
+                class="elevation-5"></v-img>
             <p v-else>Loading image...</p>
         </v-col>
         <v-col v-if="attraction" cols="6" class="pl-2 pr-2 pt-2 pb-2">
+            <div class="white elevation-5 pa-6">
             <div>
                 <h1>{{ attraction.name }}</h1>
                 <p>Country: {{ attraction.country }}</p>
@@ -18,18 +20,26 @@
             </div>
             <h2 class="reviews-title">Reviews</h2>
             <div v-if="reviews">
-                <div v-for="review in this.reviews" :key="review.review_id" class="pl-2 pr-2 pt-2 pb-2">
-                    <Review
-                        v-model:id="review.review_id"
-                        v-model:user="review.user.login"
-                        v-model:publicationDate="review.publicationDate"
-                        v-model:rating="review.rating"
-                        v-model:contents="review.contents"
-                    ></Review>
-                </div>
+                <v-infinite-scroll
+                    mode="manual"
+                    @load="load"
+                >
+                    <template v-for="(review, index) in reviews" :key="review.review_id">
+                        <div class="pl-2 pr-2 pt-2 pb-2">
+                            <Review
+                                v-model:id="review.review_id"
+                                v-model:user="review.user.login"
+                                v-model:publicationDate="review.publicationDate"
+                                v-model:rating="review.rating"
+                                v-model:contents="review.contents"
+                            ></Review>
+                        </div>
+                    </template>
+                </v-infinite-scroll>
             </div>
             <div v-else>
                 This attraction has no reviews
+            </div>
             </div>
         </v-col>
         <v-col cols="3" class = "pl-2 pr-2 pt-2 pb-2">
@@ -60,7 +70,7 @@ export default {
     //TODO: zrobic try catche i errory
         const attractionId = this.$route.params.attractionId
         this.attraction = (await AttractionService.getAttractionById(attractionId)).data
-        this.reviews = (await AttractionService.getAttractionReviews(attractionId)).data
+        this.reviews = (await AttractionService.getAttractionReviews(attractionId, 0)).data
     },
     computed: {
         attractionImage() { return `http://localhost:8080/rating-attractions/attractions/${this.$route.params.attractionId}/image` }
@@ -68,6 +78,16 @@ export default {
     methods: {
         async reloadReviews() {
             this.reviews = (await AttractionService.getAttractionReviews(this.$route.params.attractionId)).data
+        },
+        async load({ done }) {
+            const response = (await AttractionService.getAttractionReviews(this.$route.params.attractionId, this.reviews.length)).data
+            if(response.length == 0) { 
+                done('empty')
+                return
+            }
+            this.reviews.push(...response)
+
+            done('ok')
         }
     }
 }

@@ -11,6 +11,7 @@ import com.inzynierka.RatingTouristAttractions.Requests.LoginRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.RegisterRequest;
 import com.inzynierka.RatingTouristAttractions.Requests.UserUpdateRequest;
 import com.inzynierka.RatingTouristAttractions.Responses.UserStatsResponse;
+import com.inzynierka.RatingTouristAttractions.Services.AttractionRecommendationService;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -24,6 +25,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.*;
@@ -59,7 +61,7 @@ public class UserController {
         List<ReviewWithImageDto> reviewsDto = new ArrayList<>();
         for (Review review : user.getReviews()) {
             reviewsDto.add(new ReviewWithImageDto(
-                    new ReviewDto(review),
+                    review,
                     review.getAttraction().getAttraction_id(),
                     review.getAttraction().getName()
             ));
@@ -94,10 +96,10 @@ public class UserController {
         List<ReviewWithImageDto> recentlyReviewed = new ArrayList<>();
         List<String> visitedCountriesIds = new ArrayList<>();
         int index = user.getReviews().size() - 1;
-        for(int i = 0; i <=4; i++) {
+        for(int i = 0; i < 4; i++) {
             if(index < 0) break;
             recentlyReviewed.add(new ReviewWithImageDto(
-                    new ReviewDto(user.getReviews().get(index)),
+                    user.getReviews().get(index),
                     user.getReviews().get(index).getAttraction().getAttraction_id(),
                     user.getReviews().get(index).getAttraction().getName()
             ));
@@ -163,12 +165,16 @@ public class UserController {
         for(User followedUser : user.getFollowedUsers()) {
             Review recentReview = followedUser.getReviews().getLast();
             recentlyReviewed.add(new ReviewWithImageDto(
-                    new ReviewDto(recentReview),
+                    recentReview,
                     recentReview.getAttraction().getAttraction_id(),
                     recentReview.getAttraction().getName()
             ));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(recentlyReviewed);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                recentlyReviewed.stream().sorted((r1, r2) -> {
+                    return r2.getReview().getPublicationDate().compareTo(r1.getReview().getPublicationDate());
+                }).collect(Collectors.toList())
+        );
     }
 
     @GetMapping("/{id}/profilepic")
@@ -205,6 +211,19 @@ public class UserController {
                 .stream()
                 .sorted(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("{id}/recommendations")
+    List<Attraction> getRecommendations(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        AttractionRecommendationService attractionRecommendationService = new AttractionRecommendationService();
+        HashMap<Attraction, Double> predictions = attractionRecommendationService.getPredictions(user, userRepository);
+        return predictions.entrySet()
+                .stream()
+                .sorted(Map.Entry.<Attraction, Double>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .limit(5)
                 .collect(Collectors.toList());
     }
 

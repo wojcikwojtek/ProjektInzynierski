@@ -7,8 +7,8 @@ export default {
     getAttractionById (id) {
         return Api().get('/attractions/' + id)
     },
-    getAttractionReviews (id) {
-        return Api().get('/attractions/'+id+'/reviews')
+    getAttractionReviews (id, index) {
+        return Api().get('/attractions/'+id+'/reviews/' + index)
     },
     getAttractionImage (id) {
         return Api().get('/attractions/' + id + '/image')

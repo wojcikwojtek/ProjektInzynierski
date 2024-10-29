@@ -3,61 +3,100 @@
         <v-col cols="2" class="pa-2">
         </v-col>
         <v-col v-if="recentReviews" cols="8" class="pa-2">
-            <h2 class="title">Friends recent activity</h2>
-            <v-slide-group
-                v-model="recentReviews"
-                class="pa-4"
-                show-arrows
-            >
-                <v-slide-group-item
-                    v-for="element in recentReviews"
-                    :key="element.review.review_id"
+            <div class="white elevation-5 pa-6">
+            <div>
+                <h2 class="title">Friends recent activity</h2>
+                <v-slide-group
+                    v-model="recentReviews"
+                    class="pa-4"
+                    show-arrows
                 >
-                <div class="pr-2">
-                    <div class="link" @click="navigateTo({
-                        name: 'profile',
-                        params: {
-                            userId: element.review.user.user_id
-                        }
-                    })">
-                        <v-avatar size="20" class="mr-1 mb-1">
-                            <v-img :src=getProfilePicUrl(element.review.user.user_id)></v-img>
-                        </v-avatar>
-                        <span class="pb-1">{{ element.review.user.login }}</span>
-                    </div>
-                    <v-responsive
-                        class="hover-image"
-                        :aspect-ratio="16/9"
-                        style="position: relative; width: 220px; height: 124px;"
+                    <v-slide-group-item
+                        v-for="element in recentReviews"
+                        :key="element.review.review_id"
                     >
-                        <v-img 
-                        :src="getAttractionImgUrl(element.attractionId)"
-                        cover
-                        @click="navigateTo({
-                            name: 'reviewComments',
+                    <div class="pr-2">
+                        <div class="link" @click="navigateTo({
+                            name: 'profile',
                             params: {
-                                attractionId: element.attractionId,
-                                reviewId: element.review.review_id
+                                userId: element.review.user.user_id
                             }
-                        })"
-                        ></v-img>
-                        <div class="image-footer">
-                            {{ element.attractionName }}
+                        })">
+                            <v-avatar size="20" class="mr-1 mb-1">
+                                <v-img :src=getProfilePicUrl(element.review.user.user_id)></v-img>
+                            </v-avatar>
+                            <span class="pb-1">{{ element.review.user.login }}</span>
                         </div>
-                    </v-responsive>
-                    <div class="d-flex justify-center">
-                        <v-rating
-                            v-model="element.review.rating"
-                            half-increments
-                            readonly
-                            size="small"
-                            density="compact"
-                            color="cyan"
-                        ></v-rating>
+                        <v-responsive
+                            class="hover-image"
+                            :aspect-ratio="16/9"
+                            style="position: relative; width: 260px; height: 135px;"
+                        >
+                            <v-img 
+                            :src="getAttractionImgUrl(element.attractionId)"
+                            cover
+                            @click="navigateTo({
+                                name: 'reviewComments',
+                                params: {
+                                    attractionId: element.attractionId,
+                                    reviewId: element.review.review_id
+                                }
+                            })"
+                            ></v-img>
+                            <div class="image-footer">
+                                {{ element.attractionName }}
+                            </div>
+                        </v-responsive>
+                        <div class="d-flex justify-center">
+                            <v-rating
+                                v-model="element.review.rating"
+                                half-increments
+                                readonly
+                                size="small"
+                                density="compact"
+                                color="cyan"
+                            ></v-rating>
+                        </div>
                     </div>
-                </div>
-                </v-slide-group-item>
-            </v-slide-group>
+                    </v-slide-group-item>
+                </v-slide-group>
+            </div>
+            <div>
+                <h2 class="title">Recommended attractions</h2>
+                <v-slide-group
+                    v-model="recommendations"
+                    class="pa-4"
+                    show-arrows
+                >
+                    <v-slide-group-item
+                        v-for="element in recommendations"
+                        :key="element.attraction_id"
+                    >
+                    <div class="pr-2">
+                        <v-responsive
+                            class="hover-image"
+                            :aspect-ratio="16/9"
+                            style="position: relative; width: 260px; height: 135px;"
+                        >
+                            <v-img 
+                            :src="getAttractionImgUrl(element.attraction_id)"
+                            cover
+                            @click="navigateTo({
+                                name: 'attraction',
+                                params: {
+                                    attractionId: element.attraction_id
+                                }
+                            })"
+                            ></v-img>
+                            <div class="image-footer">
+                                {{ element.name }}
+                            </div>
+                        </v-responsive>
+                    </div>
+                    </v-slide-group-item>
+                </v-slide-group>
+            </div>
+            </div>
         </v-col>
     </v-row>
 </template>
@@ -69,7 +108,8 @@ import { useUserStore } from '@/stores/userStore';
 export default {
     data() {
         return {
-            recentReviews: null
+            recentReviews: null,
+            recommendations: null
         }
     },
     computed: {
@@ -77,6 +117,7 @@ export default {
     },
     async mounted() {
         this.recentReviews = (await UserService.getFollowedUsersRecentReviews(this.userStore.user.user_id)).data
+        this.recommendations = (await UserService.getRecommendations(this.userStore.user.user_id)).data
     },
     methods: {
         navigateTo(route) {

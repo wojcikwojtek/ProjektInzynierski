@@ -3,6 +3,21 @@
         <v-col cols="3" class="pa-2">
         </v-col>
         <v-col cols="6" v-if="countries" class="pa-2">
+            <v-snackbar
+                v-model="snackbar"
+                color="green"
+            >
+                <p>Succesfully suggested an attraction</p>
+                <template v-slot:actions>
+                    <v-btn
+                        color="red"
+                        variant="text"
+                        @click="snackbar = false"
+                    >   
+                        Close
+                    </v-btn>
+                </template>
+            </v-snackbar>
             <div class="white elevation-5 pa-6">
                 <h1>Suggest a new attraction</h1>
                 <br>
@@ -61,6 +76,7 @@ export default {
             location: '',
             description: '',
             selectedFile: null,
+            snackbar: false,
             rules: [
                 value => {
                     if(value) return true
@@ -87,6 +103,13 @@ export default {
                 formData.append('suggestion', new Blob([suggestionData], { type: 'application/json' }))
                 formData.append('file', this.selectedFile)
                 AdminService.addSuggestion(formData)
+                this.snackbar = true
+                this.name = ''
+                this.country = ''
+                this.city = ''
+                this.location = ''
+                this.description = ''
+                this.selectedFile = null
             } catch(error) {
                 console.log(error)
             }

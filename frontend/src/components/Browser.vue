@@ -53,7 +53,7 @@
             })">new list</v-btn>
     </v-alert>
     </div>
-    <div v-for="result in results" >
+    <div v-for="result in results" class="d-flex mx-auto w-50 pt-2">
         <v-row justify="center" dense>
             <v-col cols="12">
                 <v-card variant="outlined" max-height="150" hover v-if="value==items[0]"
