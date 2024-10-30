@@ -3,6 +3,7 @@
         <v-col cols="3" class="pa-2">
         </v-col>
         <v-col cols="6" v-if="reviews" class="pa-2">
+            <div class="white elevation-5 pa-3 bg-grey-darken-4" style="min-height: 85vh;">
             <div v-for="element in reviews" :key="element.review.review_id" class="pa-1">
                 <v-card
                     class="mx-auto"
@@ -40,6 +41,7 @@
                         </v-avatar>
                     </div>
                 </v-card>
+            </div>
             </div>
         </v-col>
     </v-row>

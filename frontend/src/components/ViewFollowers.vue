@@ -3,6 +3,7 @@
         <v-col cols="3" class="pa-2">
         </v-col>
         <v-col cols="6" class="pa-2">
+            <div class="white elevation-5 pa-3 bg-grey-darken-4" style="min-height: 85vh;">
             <v-list lines="two">
                 <v-list-item
                     v-for="element in userList"
@@ -31,6 +32,7 @@
                 </v-list-item>
                 <v-divider></v-divider>
             </v-list>
+            </div>
         </v-col>
     </v-row>
 </template>

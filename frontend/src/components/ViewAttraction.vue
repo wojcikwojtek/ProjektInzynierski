@@ -9,7 +9,7 @@
             <p v-else>Loading image...</p>
         </v-col>
         <v-col v-if="attraction" cols="6" class="pl-2 pr-2 pt-2 pb-2">
-            <div class="white elevation-5 pa-6">
+            <div class="white elevation-5 pa-6 bg-grey-darken-4">
             <div>
                 <h1>{{ attraction.name }}</h1>
                 <p>Country: {{ attraction.country }}</p>

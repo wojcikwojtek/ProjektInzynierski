@@ -3,6 +3,7 @@
         <v-col cols="3" class="pa-2">
         </v-col>
         <v-col cols="6" v-if="suggestions" class="pa-2">
+            <div class="white elevation-5 pa-6" style="min-height: 85vh;">
             <h2 class="title">Suggested Attractions</h2>
             <div v-for="suggestion in suggestions" :key="suggestion" class="pt-2 pr-2 pl-2">
                 <v-card variant="outlined">
@@ -25,6 +26,7 @@
                         </v-avatar>
                     </div>
                 </v-card>
+            </div>
             </div>
         </v-col>
     </v-row>

@@ -3,7 +3,7 @@
         <v-col cols="2" class="pa-2">
         </v-col>
         <v-col v-if="recentReviews" cols="8" class="pa-2">
-            <div class="white elevation-5 pa-6">
+            <div class="bg-grey-darken-4 elevation-5 pa-6" style="min-height: 85vh;">
             <div>
                 <h2 class="title">Friends recent activity</h2>
                 <v-slide-group
@@ -61,7 +61,7 @@
                     </v-slide-group-item>
                 </v-slide-group>
             </div>
-            <div>
+            <div class="mt-6">
                 <h2 class="title">Recommended attractions</h2>
                 <v-slide-group
                     v-model="recommendations"
@@ -147,7 +147,7 @@ export default {
     bottom: 0;
     width: 100%;
     height: 2px; 
-    background-color: #000; 
+    background-color: white; 
 }
 .hover-image {
   transition: border 0.3s ease; 

@@ -56,7 +56,7 @@
     <div v-for="result in results" class="d-flex mx-auto w-50 pt-2">
         <v-row justify="center" dense>
             <v-col cols="12">
-                <v-card variant="outlined" max-height="150" hover v-if="value==items[0]"
+                <v-card variant="outlined" max-height="150" class="bg-grey-darken-4" hover v-if="value==items[0]"
                     @click="navigateTo({
                         name: 'attraction', 
                         params: {
@@ -78,14 +78,14 @@
                         </v-avatar>
                     </div>
                 </v-card>
-                <ListComponent v-if="value==items[1]"
+                <ListComponent v-if="value==items[1]" class="bg-grey-darken-4"
                     v-model:listId="result.list_id"
                     v-model:name="result.name"
                     v-model:description="result.description"
                     v-model:user="result.user"
                     v-model:imagesUrls="result.imagesUrls"
                 ></ListComponent>
-                <v-card v-if="value==items[2]" variant="outlined" hover 
+                <v-card v-if="value==items[2]" variant="outlined" hover class="bg-grey-darken-4"
                 @click="navigateTo({
                     name: 'profile',
                     params: {

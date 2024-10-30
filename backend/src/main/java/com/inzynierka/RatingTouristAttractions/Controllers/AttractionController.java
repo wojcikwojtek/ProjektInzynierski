@@ -44,11 +44,14 @@ public class AttractionController {
         Attraction attraction = attractionRepository.findById(id).orElse(null);
         if (attraction == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Attraction not found");
         List<ReviewDto> reviews = new ArrayList<>();
+        if(index >= attraction.getReviews().size()) return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
         if(index == 0) {
-            reviews.add(new ReviewDto(attraction.getReviews().get(0)));
-            reviews.add(new ReviewDto(attraction.getReviews().get(1)));
-        } else if(index >= attraction.getReviews().size()) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ArrayList<>());
+            if(attraction.getReviews().size() == 1) {
+                reviews.add(new ReviewDto(attraction.getReviews().get(0)));
+            } else {
+                reviews.add(new ReviewDto(attraction.getReviews().get(0)));
+                reviews.add(new ReviewDto(attraction.getReviews().get(1)));
+            }
         } else {
             for(int i = index; i < index + 5; i++) {
                 if(i >= attraction.getReviews().size()) break;

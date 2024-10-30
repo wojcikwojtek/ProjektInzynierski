@@ -2,7 +2,7 @@
     <v-row no-gutters>
         <v-col cols="3" claas="pa-2"></v-col>
         <v-col cols="6" class="pa-2">
-            <div class="white elevation-5 pa-6">
+            <div class="white elevation-5 pa-6 bg-grey-darken-4">
                 <h1>Create a new list</h1>
                 <br>
                 <v-form v-model="valid">
@@ -21,7 +21,7 @@
                     <v-sheet 
                         border 
                         rounded 
-                        color="grey-lighten-4"
+                        color="grey-darken-3"
                         class="d-flex align-center justify-center flex-wrap mx-auto"
                     >
                         <draggable
@@ -93,7 +93,7 @@
                                 <div class="d-flex flex-no-wrap justify-space-between"
                                     @click="addAttraction(result)"
                                 >
-                                    <div>
+                                    <div style="width: 65%;">
                                         <v-card-title>{{ result.name }}</v-card-title>
                                         <v-card-subtitle>{{ result.country }}-{{ result.city }}-{{ result.location }}</v-card-subtitle>
                                         <v-card-text>{{ result.description }}</v-card-text>
@@ -201,4 +201,5 @@ export default {
 .not-draggable {
   cursor: no-drop;
 }
+
 </style>

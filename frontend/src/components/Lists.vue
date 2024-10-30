@@ -3,7 +3,7 @@
         <v-col cols="2" class="pa-2">
         </v-col>
         <v-col cols="8" class="pa-4">
-            <div class="white elevation-5">
+            <div class="white elevation-5 bg-grey-darken-4">
                 <v-toolbar density="compact" class="bg-cyan text-white">
                     <v-tabs
                         v-model="tab"

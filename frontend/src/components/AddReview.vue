@@ -1,6 +1,6 @@
 <template>
     <div class="text-center">
-        <v-btn block class="bg-cyan text-white" @click="openDialog">
+        <v-btn block class="bg-cyan text-white white elevation-5 mb-2" @click="openDialog">
             Add a review
         </v-btn>
 
@@ -16,7 +16,7 @@
                 <v-toolbar flat dense class="bg-cyan text-white" height="50">
                     <v-toolbar-title>Add a review</v-toolbar-title>
                 </v-toolbar>
-                <div class="pa-4">
+                <div class="pa-4 bg-grey-darken-4">
                     <v-rating
                         v-model="rating"
                         half-increments

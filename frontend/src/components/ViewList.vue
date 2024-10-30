@@ -3,6 +3,7 @@
         <v-col cols="3" class="pa-2">
         </v-col>
         <v-col cols="6" v-if="ready" class="pa-2">
+            <div class="bg-grey-darken-4">
             <v-card
                 :title="listInfo.name"   
             >
@@ -126,6 +127,7 @@
             <div v-if="enabled" class="d-flex justify-end pa-2">
                 <v-btn class="bg-cyan text-white" @click="revertChanges">Return</v-btn>
                 <v-btn class="bg-cyan text-white" @click="edit">Save changes</v-btn>
+            </div>
             </div>
         </v-col>
     </v-row>

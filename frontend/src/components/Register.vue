@@ -1,6 +1,6 @@
 <template>
   <v-layout column fill-height class="d-flex align-center justify-center">
-      <div class="white elevation-5 w-33">
+      <div class="white elevation-5 bg-grey-darken-4 w-33">
         <v-toolbar flat dense class="bg-cyan text-white">
           <v-toolbar-title>Register</v-toolbar-title>
         </v-toolbar>

@@ -3,7 +3,7 @@
         <v-col cols="3" class="pa-2">
         </v-col>
         <v-col cols="6" class="pa-2">
-            <div class="white elevation-5 pa-6">
+            <div class="white elevation-5 pa-6 bg-grey-darken-4">
                 <v-snackbar
                     v-model="snackbar"
                     color="green"

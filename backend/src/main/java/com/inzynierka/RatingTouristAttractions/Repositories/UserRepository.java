@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteByLogin(String login);
     @Query(value = "SELECT Count(*) FROM user_following where followed_user_id = ?",nativeQuery = true)
     int countFollowers(Long userId);
-    @Query(value = "SELECT u.user_id, u.login, u.password, u.email FROM users u JOIN user_following f ON u.user_id = f.user_id WHERE f.followed_user_id = ?", nativeQuery = true)
+    @Query(value = "SELECT u.user_id, u.login, u.password, u.email, u.is_admin FROM users u JOIN user_following f ON u.user_id = f.user_id WHERE f.followed_user_id = ?", nativeQuery = true)
     List<User> findFollowers(Long userId);
 }

@@ -54,7 +54,7 @@ async function load({done}) {
             </div>
         </template>
         <template v-slot:empty>
-            <v-alert type="warning">No more items!</v-alert>
+            <span>No more items!</span>
         </template>
     </v-infinite-scroll>
 </template>

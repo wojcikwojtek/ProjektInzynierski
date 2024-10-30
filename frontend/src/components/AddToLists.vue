@@ -1,5 +1,5 @@
 <template>
-    <v-btn block class="bg-cyan text-white text-center" @click="openDialog">
+    <v-btn block class="bg-cyan text-white text-center white elevation-5" @click="openDialog">
         Add to lists
     </v-btn>
 
@@ -15,10 +15,10 @@
             <v-toolbar flat dense class="bg-cyan text-white text-center" height="50">
                 <v-toolbar-title>Add to lists</v-toolbar-title>
             </v-toolbar>
-            <div class="pl-1 pr-1 pt-4 pb-4">
+            <div class="pl-1 pr-1 pt-4 pb-4 bg-grey-darken-4">
                 <div v-for="list in this.lists" :key="list.list_id">
                     <v-card
-                        class="mx-auto pb-1"
+                        class="mx-auto mb-1 mr-2 ml-2"
                         variant="outlined"
                         :title="list.name"
                         hover
@@ -33,7 +33,7 @@
                         </template>
                     </v-card>
                 </div>
-                <div class="d-flex justify-center pt-3">
+                <div class="d-flex justify-center pt-3 mb-2">
                     <v-btn class="bg-cyan text-white text-center" @click="add">
                         Add
                     </v-btn>

@@ -3,7 +3,7 @@
         <v-col cols="2" class = "pl-2 pr-2 pt-2 pb-2">
         </v-col>
         <v-col v-if="stats" cols="8" class = "pl-2 pr-2 pt-2 pb-2">
-            <div class="white elevation-5 pa-6">
+            <div class="white elevation-5 pa-6 bg-grey-darken-4">
             <div class="d-flex mb-6">
                 <v-avatar size="100">
                     <v-img :src="profilePic"></v-img>
@@ -221,7 +221,7 @@ export default {
 }
 
 .link:hover {
-    background-color: lightgrey;
+    background-color: #757575;
 }
 
 .image-footer {
