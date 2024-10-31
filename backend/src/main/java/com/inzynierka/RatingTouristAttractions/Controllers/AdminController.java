@@ -2,9 +2,11 @@ package com.inzynierka.RatingTouristAttractions.Controllers;
 
 import com.inzynierka.RatingTouristAttractions.Entities.Attraction;
 import com.inzynierka.RatingTouristAttractions.Entities.AttractionSuggestion;
+import com.inzynierka.RatingTouristAttractions.Entities.Review;
 import com.inzynierka.RatingTouristAttractions.Entities.User;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionRepository;
 import com.inzynierka.RatingTouristAttractions.Repositories.AttractionSuggestionRepository;
+import com.inzynierka.RatingTouristAttractions.Repositories.ReviewRepository;
 import com.inzynierka.RatingTouristAttractions.Repositories.UserRepository;
 import com.inzynierka.RatingTouristAttractions.Requests.AttractionRequest;
 import org.springframework.core.io.Resource;
@@ -29,11 +31,13 @@ public class AdminController {
     private final AttractionSuggestionRepository attractionSuggestionRepository;
     private final UserRepository userRepository;
     private final AttractionRepository attractionRepository;
+    private final ReviewRepository reviewRepository;
 
-    public AdminController(AttractionSuggestionRepository attractionSuggestionRepository, UserRepository userRepository, AttractionRepository attractionRepository) {
+    public AdminController(AttractionSuggestionRepository attractionSuggestionRepository, UserRepository userRepository, AttractionRepository attractionRepository, ReviewRepository reviewRepository) {
         this.attractionSuggestionRepository = attractionSuggestionRepository;
         this.userRepository = userRepository;
         this.attractionRepository = attractionRepository;
+        this.reviewRepository = reviewRepository;
     }
 
     @GetMapping("/{id}/makeadmin")
@@ -61,6 +65,12 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Image url is invalid");
         }
     }
+
+    @GetMapping("/reported/reviews")
+    List<Review> getReportedReviews() { return reviewRepository.findByIsReportedTrue(); }
+
+    @GetMapping("/reported/comments")
+    List<Review> getReportedComments() { return reviewRepository.findByIsReportedTrue(); }
 
     @PostMapping("/addsuggestion")
     ResponseEntity<?> addSuggestion(@RequestPart("suggestion") AttractionRequest suggestion, @RequestPart("file") MultipartFile file) {

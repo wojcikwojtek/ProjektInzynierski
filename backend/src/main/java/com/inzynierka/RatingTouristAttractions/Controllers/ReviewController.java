@@ -55,7 +55,11 @@ public class ReviewController {
     List<Comment> getReviewComments(@PathVariable long id) {
         Review review = reviewRepository.findById(id).orElse(null);
         if (review == null) return null;
-        return review.getComments();
+        return review.getComments()
+                .stream()
+                .filter(comment -> !comment.isBlocked())
+                .toList();
+
     }
 
     @GetMapping("/{id}/commentcount")
@@ -95,6 +99,15 @@ public class ReviewController {
             UserCountry userCountry = new UserCountry(user, country);
             userCountryRepository.save(userCountry);
         }
+        return ResponseEntity.status(HttpStatus.CREATED).body(review);
+    }
+
+    @PostMapping("/report")
+    ResponseEntity<?> reportReview(@RequestBody long reviewId) {
+        Review review = reviewRepository.findById(reviewId).orElse(null);
+        if(review == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found");
+        review.setReported(true);
+        reviewRepository.save(review);
         return ResponseEntity.status(HttpStatus.CREATED).body(review);
     }
 

@@ -94,7 +94,7 @@
                                         ></v-rating><br>
                                         <v-btn 
                                             v-if="element.ratingAndId['1']!=0"
-                                            class="bg-cyan text-white"
+                                            class="bg-cyan text-white mr-2"
                                             text="Read review"
                                             size="small"
                                             @click.stop="navigateTo({
@@ -125,7 +125,7 @@
                 </template>
             </draggable>
             <div v-if="enabled" class="d-flex justify-end pa-2">
-                <v-btn class="bg-cyan text-white" @click="revertChanges">Return</v-btn>
+                <v-btn class="bg-red text-white mr-2" @click="revertChanges">Return</v-btn>
                 <v-btn class="bg-cyan text-white" @click="edit">Save changes</v-btn>
             </div>
             </div>

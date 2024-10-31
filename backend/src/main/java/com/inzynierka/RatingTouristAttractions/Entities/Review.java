@@ -28,6 +28,12 @@ public class Review {
     @Column(name = "publication_date")
     private LocalDateTime publicationDate;
 
+    @Column(name = "is_reported")
+    private boolean isReported;
+
+    @Column(name = "is_blocked")
+    private boolean isBlocked;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -51,6 +57,8 @@ public class Review {
         this.rating = rating;
         this.contents = contents;
         this.publicationDate = LocalDateTime.now();
+        this.isReported = false;
+        this.isBlocked = false;
         this.user = user;
         this.attraction = attraction;
     }

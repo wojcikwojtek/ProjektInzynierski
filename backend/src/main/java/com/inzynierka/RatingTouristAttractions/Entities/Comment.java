@@ -22,6 +22,12 @@ public class Comment {
     @Column(name = "publication_date")
     private String publicationDate;
 
+    @Column(name = "is_reported")
+    private boolean isReported;
+
+    @Column(name = "is_blocked")
+    private boolean isBlocked;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -36,6 +42,8 @@ public class Comment {
     public Comment(String contents, String publicationDate, User user, Review review) {
         this.contents = contents;
         this.publicationDate = publicationDate;
+        this.isReported = false;
+        this.isBlocked = false;
         this.user = user;
         this.review = review;
     }

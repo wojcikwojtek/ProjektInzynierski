@@ -61,6 +61,15 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
+    @PostMapping("/report")
+    ResponseEntity<?> reportComment(@RequestBody long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElse(null);
+        if(comment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Comment not found");
+        comment.setReported(true);
+        commentRepository.save(comment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
+    }
+
     @DeleteMapping("/{id}")
     void deleteCommentById(@PathVariable long id) { commentRepository.deleteById(id); }
 }
