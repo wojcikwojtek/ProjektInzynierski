@@ -65,6 +65,14 @@
                     <v-card-text>{{ comment.contents }}</v-card-text>
                 </v-card>
             </div>
+            <div v-if="comments.length == 0">
+                <v-alert
+                    text="There are currently no comments for this review"
+                    type="info"
+                    color="cyan"
+                    class="text-white"
+                ></v-alert>
+            </div>
             </div>
         </v-col>
     </v-row>
@@ -146,7 +154,7 @@ export default {
     bottom: 0;
     width: 100%;
     height: 2px; 
-    background-color: #000; 
+    background-color: white; 
 }
 .link{
     cursor: pointer;

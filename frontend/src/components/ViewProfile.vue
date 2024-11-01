@@ -204,7 +204,7 @@ export default {
     bottom: 0;
     width: 100%;
     height: 2px; 
-    background-color: #000; 
+    background-color: white; 
 }
 .hover-image {
   transition: border 0.3s ease; 

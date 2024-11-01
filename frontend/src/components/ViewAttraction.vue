@@ -35,6 +35,14 @@
                             ></Review>
                         </div>
                     </template>
+                    <template v-if="reviews.length == 0">
+                        <v-alert
+                            text="There are currently no reviews for this attraction"
+                            type="info"
+                            color="cyan"
+                            class="text-white"
+                        ></v-alert>
+                    </template>
                 </v-infinite-scroll>
             </div>
             <div v-else>
@@ -107,7 +115,7 @@ export default {
     bottom: 0;
     width: 100%;
     height: 2px; 
-    background-color: #000; 
+    background-color: white; 
 }
 </style>
   

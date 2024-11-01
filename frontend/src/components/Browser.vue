@@ -28,11 +28,12 @@
         close-label="Close Alert"
         icon="$info"
         color="cyan"
+        class="text-white"
         title="Can't find any attractions"
         text="If you can't find what you're looking for try suggesting a"
         closable
     >
-        <v-btn variant="text" class="bg-cyan text-black" density="compact" 
+        <v-btn variant="text" class="bg-cyan text-white" density="compact" 
             @click="navigateTo({
                 name: 'addAttraction'
             })">new attraction</v-btn>
@@ -43,11 +44,12 @@
         close-label="Close Alert"
         icon="$info"
         color="cyan"
+        class="text-white"
         title="Can't find any lists"
         text="If you can't find what you're looking for try creating a"
         closable
     >
-        <v-btn variant="text" class="bg-cyan text-black" density="compact" 
+        <v-btn variant="text" class="bg-cyan text-white" density="compact" 
             @click="navigateTo({
                 name: 'listCreate'
             })">new list</v-btn>

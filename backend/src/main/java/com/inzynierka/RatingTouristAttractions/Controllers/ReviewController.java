@@ -103,7 +103,7 @@ public class ReviewController {
     }
 
     @PostMapping("/report")
-    ResponseEntity<?> reportReview(@RequestBody long reviewId) {
+    ResponseEntity<?> reportReview(@RequestParam long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElse(null);
         if(review == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found");
         review.setReported(true);

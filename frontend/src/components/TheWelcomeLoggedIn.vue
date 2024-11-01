@@ -60,6 +60,14 @@
                     </div>
                     </v-slide-group-item>
                 </v-slide-group>
+                <div v-if="recentReviews.length == 0">
+                    <v-alert
+                        text="Your friends didn't review anything yet"
+                        type="info"
+                        color="cyan"
+                        class="text-white"
+                    ></v-alert>
+                </div>
             </div>
             <div class="mt-6">
                 <h2 class="title">Recommended attractions</h2>

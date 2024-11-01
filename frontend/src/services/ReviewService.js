@@ -4,6 +4,9 @@ export default {
     addReview(data) {
         return Api().post('reviews/add', data)
     },
+    reportReview(data) {
+        return Api().post(`reviews/report?reviewId=${data}`)
+    },
     getReview(id) {
         return Api().get('reviews/' + id)
     },

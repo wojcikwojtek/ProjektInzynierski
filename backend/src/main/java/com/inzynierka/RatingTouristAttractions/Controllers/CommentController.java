@@ -62,7 +62,7 @@ public class CommentController {
     }
 
     @PostMapping("/report")
-    ResponseEntity<?> reportComment(@RequestBody long commentId) {
+    ResponseEntity<?> reportComment(@RequestParam long commentId) {
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(comment == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Comment not found");
         comment.setReported(true);
