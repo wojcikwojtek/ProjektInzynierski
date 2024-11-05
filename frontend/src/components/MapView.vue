@@ -1,19 +1,50 @@
 <script setup>
-import UserService from '@/services/UserService';
-import { ref, onMounted } from 'vue';
-import { useUserStore } from '@/stores/userStore';
+import CountryService from '@/services/CountryService';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useIntervalFn } from '@vueuse/core';
 
 const visitedCountries = defineModel('visitedCountries')
-const userStore = useUserStore()
 const svgElement = ref(null)
+const router = useRouter()
+const currentPath = router.currentRoute.value.path + ''
+const allCountries = ref(null)
+const randomCountry = ref(null)
+
+function animateMap() {
+   if(randomCountry.value != null) {
+      const pathElementOld = svgElement.value.querySelector(`#${randomCountry.value.country_id}`)
+      if(pathElementOld) {
+         pathElementOld.style.fill = 'gray'
+      }
+   }
+   const randomCountryIndex = Math.floor(Math.random() * allCountries.value.length)
+   randomCountry.value = allCountries.value[randomCountryIndex]
+   console.log(randomCountry.value)
+   const pathElement = svgElement.value.querySelector(`#${randomCountry.value.country_id}`)
+   if(pathElement) {
+      pathElement.style.fill = '#00BCD4'
+   }
+}
+
+const { pause, resume, isActive } = useIntervalFn(() => {
+   animateMap()
+}, 5000)
 
 onMounted(async () => {
-    visitedCountries.value.forEach((pathId) => {
-        const pathElement = svgElement.value.querySelector(`#${pathId}`)
-        if(pathElement) {
+   pause()
+   if(currentPath.includes('users')) {
+      visitedCountries.value.forEach((pathId) => {
+         const pathElement = svgElement.value.querySelector(`#${pathId}`)
+         if(pathElement) {
             pathElement.style.fill = '#00BCD4'
-        }
-    })
+         }
+      })
+   } else {
+      allCountries.value = (await CountryService.getAllCountries()).data
+      animateMap()
+      resume()
+   }
 })
 </script>
 
@@ -1063,6 +1094,7 @@ onMounted(async () => {
 
 <style scoped>
 path{
-    fill: gray;
+   fill: gray;
+   transition: fill 0.5s ease;
 }
 </style>
