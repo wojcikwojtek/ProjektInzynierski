@@ -10,15 +10,13 @@
                     >
                         <v-tab value="one">Most Popular</v-tab>
                         <v-tab value="two">Newest</v-tab>
-                        <v-tab value="three">Friends lists</v-tab>
+                        <v-tab v-if="userStore.isUserLoggedIn" value="three">Friends lists</v-tab>
                     </v-tabs>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
                         <v-btn
                             append-icon="mdi-plus"
-                            @click="navigateTo({
-                                name: 'listCreate'
-                            })"
+                            @click="createNew"
                         >
                             Create new
                         </v-btn>
@@ -65,6 +63,17 @@ export default {
     methods: {
         navigateTo(route) {
             this.$router.push(route)
+        },
+        createNew() {
+            if(this.userStore.isUserLoggedIn) {
+                this.navigateTo({
+                    name: 'listCreate'
+                })
+            } else {
+                this.navigateTo({
+                    name: 'login'
+                })
+            }
         }
     }
 }

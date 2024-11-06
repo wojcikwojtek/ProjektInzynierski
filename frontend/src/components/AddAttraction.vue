@@ -18,7 +18,7 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-            <div class="white elevation-5 pa-6">
+            <div class="white elevation-5 pa-6 bg-grey-darken-4">
                 <h1>Suggest a new attraction</h1>
                 <br>
                 <v-form v-model="valid">

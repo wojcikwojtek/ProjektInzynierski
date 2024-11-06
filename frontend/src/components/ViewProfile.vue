@@ -52,6 +52,14 @@
                         </div>
                     </v-col>
                 </v-row>
+                <div v-if="stats.recentlyReviewed.length == 0" class="pa-2">
+                    <v-alert
+                        text="User didn't review anything yet"
+                        type="info"
+                        color="cyan"
+                        class="text-white"
+                    ></v-alert>
+                </div>
             </div>
             <div>
                 <h3 class="title">User's stats</h3>

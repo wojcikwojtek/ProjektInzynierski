@@ -65,7 +65,7 @@
                     <v-card-text>{{ comment.contents }}</v-card-text>
                 </v-card>
             </div>
-            <div v-if="comments.length == 0">
+            <div v-if="comments == null || comments.length == 0">
                 <v-alert
                     text="There are currently no comments for this review"
                     type="info"

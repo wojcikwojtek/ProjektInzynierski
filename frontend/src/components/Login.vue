@@ -5,16 +5,20 @@
             <v-toolbar-title>Login</v-toolbar-title>
           </v-toolbar>
           <div class="pl-4 pr-4 pt-2 pb-2">
-            <form name="rate-attractions-form">
-                <v-text-field v-model="username" label="login"></v-text-field>
-                <v-text-field v-model="password" label="password" type="password"></v-text-field>
-                <div class="d-flex justify-center">
+            <v-form v-model="valid">
+                <v-text-field v-model="username" label="login" :rules="rules"></v-text-field>
+                <v-text-field v-model="password" label="password" type="password" :rules="rules"></v-text-field>
+                <div class="d-flex justify-center" v-if="error">
                     <div class="error"v-html="error"></div><br>
                 </div>
                 <div class="d-flex justify-center">
                     <v-btn class="bg-cyan text-white" @click="login">Login</v-btn>
                 </div>
-            </form>
+            </v-form>
+            <div class="d-flex justify-center mt-3">
+              <span>If you don't have an account </span>
+              <RouterLink to="/register" class="text-cyan ml-1">Sign Up</RouterLink>
+            </div>
           </div>
         </div>
     </v-layout>
@@ -23,12 +27,20 @@
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
 import { useUserStore } from '@/stores/userStore'
+import { RouterLink } from 'vue-router';
 export default {
     data () {
     return {
       username: '',
       password: '',
-      error: null
+      valid: false,
+      error: null,
+      rules: [
+        value => {
+          if(value) return true
+          return `Don't leave an empty field`
+        }
+      ]
       }
     },
     computed: {
@@ -36,10 +48,7 @@ export default {
     },
     methods: {
       async login () {
-        if(this.username == '' || this.password == '') {
-          this.error = "Fill out all fields"
-          return
-        }
+        if(!this.valid) return
         try {
           const response = await AuthenticationService.login({
             login: this.username,

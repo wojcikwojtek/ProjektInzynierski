@@ -60,7 +60,7 @@
                     </div>
                     </v-slide-group-item>
                 </v-slide-group>
-                <div v-if="recentReviews.length == 0">
+                <div v-if="recentReviews.length == 0" class="pb-10 pt-10">
                     <v-alert
                         text="Your friends didn't review anything yet"
                         type="info"

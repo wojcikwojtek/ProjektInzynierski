@@ -1,6 +1,6 @@
 <script setup>
 import CountryService from '@/services/CountryService';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useIntervalFn } from '@vueuse/core';
 
@@ -20,7 +20,6 @@ function animateMap() {
    }
    const randomCountryIndex = Math.floor(Math.random() * allCountries.value.length)
    randomCountry.value = allCountries.value[randomCountryIndex]
-   console.log(randomCountry.value)
    const pathElement = svgElement.value.querySelector(`#${randomCountry.value.country_id}`)
    if(pathElement) {
       pathElement.style.fill = '#00BCD4'
@@ -29,7 +28,7 @@ function animateMap() {
 
 const { pause, resume, isActive } = useIntervalFn(() => {
    animateMap()
-}, 5000)
+}, 1500)
 
 onMounted(async () => {
    pause()

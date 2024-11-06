@@ -30,13 +30,11 @@
         color="cyan"
         class="text-white"
         title="Can't find any attractions"
-        text="If you can't find what you're looking for try suggesting a"
+        text="If you can't find what you're looking for try suggesting a "
         closable
     >
-        <v-btn variant="text" class="bg-cyan text-white" density="compact" 
-            @click="navigateTo({
-                name: 'addAttraction'
-            })">new attraction</v-btn>
+        <RouterLink v-if="userStore.isUserLoggedIn" to="/attractions/add" class="text-white">new attraction</RouterLink>
+        <span v-else class="text-white">new attraction</span>
     </v-alert>
     <v-alert
         v-if="value==items[1]"
@@ -46,13 +44,11 @@
         color="cyan"
         class="text-white"
         title="Can't find any lists"
-        text="If you can't find what you're looking for try creating a"
+        text="If you can't find what you're looking for try creating a "
         closable
     >
-        <v-btn variant="text" class="bg-cyan text-white" density="compact" 
-            @click="navigateTo({
-                name: 'listCreate'
-            })">new list</v-btn>
+        <RouterLink v-if="userStore.isUserLoggedIn" to="/lists/create" class="text-white">new list</RouterLink>
+        <span v-else class="text-white">new list</span>
     </v-alert>
     </div>
     <div v-for="result in results" class="d-flex mx-auto w-50 pt-2">
@@ -119,6 +115,7 @@ import ListService from '@/services/ListService';
 import ListComponent from './ListComponent.vue';
 import UserService from '@/services/UserService';
 import { useUserStore } from '@/stores/userStore';
+import { RouterLink } from 'vue-router';
 
 export default {
     data () {

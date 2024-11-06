@@ -101,16 +101,17 @@ function navigateTo(route) {
         </template>
         <v-card-text>{{ contents }}
         </v-card-text>
-        <v-card-actions v-if="userStore.isUserLoggedIn">
+        <v-card-actions>
             <div v-if="!currentPath.includes('admin')">
                 <v-btn
+                    v-if="userStore.isUserLoggedIn"
                     size="small"
                     :color="didUserLikeReview ? 'red' : 'grey'"
                     icon="mdi-heart"
                     variant="text"
                     @click="likeReview"
                 ></v-btn>
-                <span class="subheading">{{ likeCount }}</span>
+                <span v-if="userStore.isUserLoggedIn" class="subheading">{{ likeCount }}</span>
                 <v-btn
                     size="small"
                     color="grey"
@@ -127,6 +128,7 @@ function navigateTo(route) {
                 ></v-btn>
                 <span v-if="!currentPath.includes('reviews')" class="subheading">{{ commentCount }}</span>
                 <v-btn
+                    v-if="userStore.isUserLoggedIn"
                     size="small"
                     color="grey"
                     icon="mdi-flag"
